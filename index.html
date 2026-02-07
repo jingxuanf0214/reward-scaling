@@ -1,312 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  
-  <!-- Primary Meta Tags -->
-  <!-- TODO: Replace with your paper title and author names -->
-  <meta name="title" content="PAPER_TITLE - AUTHOR_NAMES">
-  <!-- TODO: Write a compelling 150-160 character description of your research -->
-  <meta name="description" content="BRIEF_DESCRIPTION_OF_YOUR_RESEARCH_CONTRIBUTION_AND_FINDINGS">
-  <!-- TODO: Add 5-10 relevant keywords for your research area -->
-  <meta name="keywords" content="KEYWORD1, KEYWORD2, KEYWORD3, machine learning, computer vision, AI">
-  <!-- TODO: List all authors -->
-  <meta name="author" content="FIRST_AUTHOR_NAME, SECOND_AUTHOR_NAME">
-  <meta name="robots" content="index, follow">
-  <meta name="language" content="English">
-  
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="article">
-  <!-- TODO: Replace with your institution or lab name -->
-  <meta property="og:site_name" content="INSTITUTION_OR_LAB_NAME">
-  <!-- TODO: Same as paper title above -->
-  <meta property="og:title" content="PAPER_TITLE">
-  <!-- TODO: Same as description above -->
-  <meta property="og:description" content="BRIEF_DESCRIPTION_OF_YOUR_RESEARCH_CONTRIBUTION_AND_FINDINGS">
-  <!-- TODO: Replace with your actual website URL -->
-  <meta property="og:url" content="https://YOUR_DOMAIN.com/YOUR_PROJECT_PAGE">
-  <!-- TODO: Create a 1200x630px preview image and update path -->
-  <meta property="og:image" content="https://YOUR_DOMAIN.com/static/images/social_preview.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="PAPER_TITLE - Research Preview">
-  <meta property="article:published_time" content="2024-01-01T00:00:00.000Z">
-  <meta property="article:author" content="FIRST_AUTHOR_NAME">
-  <meta property="article:section" content="Research">
-  <meta property="article:tag" content="KEYWORD1">
-  <meta property="article:tag" content="KEYWORD2">
+  <meta charset="utf-8" />
 
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image">
-  <!-- TODO: Replace with your lab/institution Twitter handle -->
-  <meta name="twitter:site" content="@YOUR_TWITTER_HANDLE">
-  <!-- TODO: Replace with first author's Twitter handle -->
-  <meta name="twitter:creator" content="@AUTHOR_TWITTER_HANDLE">
-  <!-- TODO: Same as paper title above -->
-  <meta name="twitter:title" content="PAPER_TITLE">
-  <!-- TODO: Same as description above -->
-  <meta name="twitter:description" content="BRIEF_DESCRIPTION_OF_YOUR_RESEARCH_CONTRIBUTION_AND_FINDINGS">
-  <!-- TODO: Same as social preview image above -->
-  <meta name="twitter:image" content="https://YOUR_DOMAIN.com/static/images/social_preview.png">
-  <meta name="twitter:image:alt" content="PAPER_TITLE - Research Preview">
+  <!-- Meta tags for social media banners -->
+  <meta name="description" content="Scaling Reward Modeling without Human Supervision: a pilot study on training reward models from raw web text using continuation-based preference pairing (no human labels). Improves RewardBench v1/v2 and transfers across backbones." />
+  <meta property="og:title" content="Scaling Reward Modeling without Human Supervision" />
+  <meta property="og:description" content="Unsupervised reward-based scaling (RBS): preference learning over document prefixes/suffixes from web corpora. Gains on RewardBench v1/v2; improves BoN selection and GRPO policy optimization." />
+  <meta property="og:url" content="https://YOUR-DOMAIN.TLD/rbs" />
+  <meta property="og:image" content="static/images/rbs_og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
 
-  <!-- Academic/Research Specific -->
-  <meta name="citation_title" content="PAPER_TITLE">
-  <meta name="citation_author" content="FIRST_AUTHOR_LAST, FIRST_AUTHOR_FIRST">
-  <meta name="citation_author" content="SECOND_AUTHOR_LAST, SECOND_AUTHOR_FIRST">
-  <meta name="citation_publication_date" content="2024">
-  <meta name="citation_conference_title" content="CONFERENCE_NAME">
-  <meta name="citation_pdf_url" content="https://YOUR_DOMAIN.com/static/pdfs/paper.pdf">
-  
-  <!-- Additional SEO -->
-  <meta name="theme-color" content="#2563eb">
-  <meta name="msapplication-TileColor" content="#2563eb">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  
-  <!-- Preconnect for performance -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://ajax.googleapis.com">
-  <link rel="preconnect" href="https://documentcloud.adobe.com">
-  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <meta name="twitter:title" content="Scaling Reward Modeling without Human Supervision" />
+  <meta name="twitter:description" content="Reward models from raw web text, no human labels: continuation-based preference pairing + BT loss + centering. Improves RewardBench v1/v2; helps BoN and GRPO." />
+  <meta name="twitter:image" content="static/images/rbs_twitter.png" />
+  <meta name="twitter:card" content="summary_large_image" />
 
+  <meta name="keywords" content="reward modeling, RLHF, preference learning, unsupervised learning, rewardbench, best-of-n, policy optimization, GRPO, math reasoning, safety, web data, Bradley-Terry" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- TODO: Replace with your paper title and authors -->
-  <title>PAPER_TITLE - AUTHOR_NAMES | Academic Research</title>
-  
-  <!-- Favicon and App Icons -->
-  <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
-  <link rel="apple-touch-icon" href="static/images/favicon.ico">
-  
-  <!-- Critical CSS - Load synchronously -->
-  <link rel="stylesheet" href="static/css/bulma.min.css">
-  <link rel="stylesheet" href="static/css/index.css">
-  
-  <!-- Non-critical CSS - Load asynchronously -->
-  <link rel="preload" href="static/css/bulma-carousel.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <link rel="preload" href="static/css/bulma-slider.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <link rel="preload" href="static/css/fontawesome.all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <link rel="preload" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  
-  <!-- Fallback for browsers that don't support preload -->
-  <noscript>
-    <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
-    <link rel="stylesheet" href="static/css/bulma-slider.min.css">
-    <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
-  </noscript>
-  
-  <!-- Fonts - Optimized loading -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- Defer non-critical JavaScript -->
-  <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script defer src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
+  <title>Scaling Reward Modeling without Human Supervision</title>
+
+  <link rel="icon" type="image/x-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQYV2NkYGD4DwABBAEAja6zVwAAAABJRU5ErkJggg==" />
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet" />
+
+  <link rel="stylesheet" href="static/css/bulma.min.css" />
+  <link rel="stylesheet" href="static/css/bulma-carousel.min.css" />
+  <link rel="stylesheet" href="static/css/fontawesome.all.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" />
+  <link rel="stylesheet" href="static/css/index.css?v=20260206_3" />
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script defer src="static/js/fontawesome.all.min.js"></script>
-  <script defer src="static/js/bulma-carousel.min.js"></script>
-  <script defer src="static/js/bulma-slider.min.js"></script>
-  <script defer src="static/js/index.js"></script>
-  
-  <!-- Structured Data for Academic Papers -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "ScholarlyArticle",
-    "headline": "PAPER_TITLE",
-    "description": "BRIEF_DESCRIPTION_OF_YOUR_RESEARCH_CONTRIBUTION_AND_FINDINGS",
-    "author": [
-      {
-        "@type": "Person",
-        "name": "FIRST_AUTHOR_NAME",
-        "affiliation": {
-          "@type": "Organization",
-          "name": "INSTITUTION_NAME"
-        }
-      },
-      {
-        "@type": "Person",
-        "name": "SECOND_AUTHOR_NAME",
-        "affiliation": {
-          "@type": "Organization",
-          "name": "INSTITUTION_NAME"
-        }
-      }
-    ],
-    "datePublished": "2024-01-01",
-    "publisher": {
-      "@type": "Organization",
-      "name": "CONFERENCE_OR_JOURNAL_NAME"
-    },
-    "url": "https://YOUR_DOMAIN.com/YOUR_PROJECT_PAGE",
-    "image": "https://YOUR_DOMAIN.com/static/images/social_preview.png",
-    "keywords": ["KEYWORD1", "KEYWORD2", "KEYWORD3", "machine learning", "computer vision"],
-    "abstract": "FULL_ABSTRACT_TEXT_HERE",
-    "citation": "BIBTEX_CITATION_HERE",
-    "isAccessibleForFree": true,
-    "license": "https://creativecommons.org/licenses/by/4.0/",
-    "mainEntity": {
-      "@type": "WebPage",
-      "@id": "https://YOUR_DOMAIN.com/YOUR_PROJECT_PAGE"
-    },
-    "about": [
-      {
-        "@type": "Thing",
-        "name": "RESEARCH_AREA_1"
-      },
-      {
-        "@type": "Thing", 
-        "name": "RESEARCH_AREA_2"
-      }
-    ]
-  }
+  <script src="static/js/bulma-carousel.min.js"></script>
+  <script src="static/js/index.js"></script>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] }
+    };
   </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   
-  <!-- Website/Organization Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "INSTITUTION_OR_LAB_NAME",
-    "url": "https://YOUR_INSTITUTION_WEBSITE.com",
-    "logo": "https://YOUR_DOMAIN.com/static/images/favicon.ico",
-    "sameAs": [
-      "https://twitter.com/YOUR_TWITTER_HANDLE",
-      "https://github.com/YOUR_GITHUB_USERNAME"
-    ]
-  }
-  </script>
 </head>
+
 <body>
 
+  <!-- Header / Hero -->
+  <!-- ===== HERO (replace your current hero section content with this) ===== -->
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
 
-  <!-- Scroll to Top Button -->
-  <button class="scroll-to-top" onclick="scrollToTop()" title="Scroll to top" aria-label="Scroll to top">
-    <i class="fas fa-chevron-up"></i>
-  </button>
+          <h1 class="title is-1 publication-title">Scaling Reward Modeling without Human Supervision</h1>
 
-  <!-- More Works Dropdown -->
-  <div class="more-works-container">
-    <button class="more-works-btn" onclick="toggleMoreWorks()" title="View More Works from Our Lab">
-      <i class="fas fa-flask"></i>
-      More Works
-      <i class="fas fa-chevron-down dropdown-arrow"></i>
-    </button>
-    <div class="more-works-dropdown" id="moreWorksDropdown">
-      <div class="dropdown-header">
-        <h4>More Works from Our Lab</h4>
-        <button class="close-btn" onclick="toggleMoreWorks()">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      <div class="works-list">
-        <!-- TODO: Replace with your lab's related works -->
-        <a href="https://arxiv.org/abs/PAPER_ID_1" class="work-item" target="_blank">
-          <div class="work-info">
-            <!-- TODO: Replace with actual paper title -->
-            <h5>Paper Title 1</h5>
-            <!-- TODO: Replace with brief description -->
-            <p>Brief description of the work and its main contribution.</p>
-            <!-- TODO: Replace with venue and year -->
-            <span class="work-venue">Conference/Journal 2024</span>
+          <!-- Authors -->
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a class="first-author" href="https://jingxuanf0214.github.io/" target="_blank" rel="noopener noreferrer">
+                Jingxuan Fan
+              </a><sup>1</sup>,
+            </span>
+          
+            <span class="author-block">
+              <a href="https://yueying-lisa-li.org/" target="_blank" rel="noopener noreferrer">
+                Yueying Li
+              </a><sup>2</sup>,
+            </span>
+          
+            <span class="author-block">
+              <a href="https://zhentingqi.github.io/" target="_blank" rel="noopener noreferrer">
+                Zhenting Qi
+              </a><sup>1</sup>,
+            </span>
+          
+            <span class="author-block">
+              <a href="https://zdhnarsil.github.io/" target="_blank" rel="noopener noreferrer">
+                Dinghuai Zhang
+              </a><sup>3</sup>,
+            </span>
+          
+            <br />
+          
+            <span class="author-block">
+              <a href="https://xkianteb.github.io/" target="_blank" rel="noopener noreferrer">
+                Kianté Brantley
+              </a><sup>1,4</sup>,
+            </span>
+          
+            <span class="author-block">
+              <a href="https://shamulent.github.io/" target="_blank" rel="noopener noreferrer">
+                Sham M. Kakade
+              </a><sup>1,4</sup>,
+            </span>
+          
+            <span class="author-block">
+              <a href="https://hanlin-zhang.com/" target="_blank" rel="noopener noreferrer">
+                Hanlin Zhang
+              </a><sup>1</sup>
+              </a>
+            </span>
           </div>
-          <i class="fas fa-external-link-alt"></i>
-        </a>
-        <!-- TODO: Add more related works or remove extra items -->
-        <a href="https://arxiv.org/abs/PAPER_ID_2" class="work-item" target="_blank">
-          <div class="work-info">
-            <h5>Paper Title 2</h5>
-            <p>Brief description of the work and its main contribution.</p>
-            <span class="work-venue">Conference/Journal 2023</span>
-          </div>
-          <i class="fas fa-external-link-alt"></i>
-        </a>
-        <a href="https://arxiv.org/abs/PAPER_ID_3" class="work-item" target="_blank">
-          <div class="work-info">
-            <h5>Paper Title 3</h5>
-            <p>Brief description of the work and its main contribution.</p>
-            <span class="work-venue">Conference/Journal 2023</span>
-          </div>
-          <i class="fas fa-external-link-alt"></i>
-        </a>
-      </div>
-    </div>
-  </div>
+          
 
-  <main id="main-content">
-  <section class="hero">
-    <div class="hero-body">
-      <div class="container is-max-desktop">
-        <div class="columns is-centered">
+          <!-- Affiliations -->
+          <div class="is-size-6 publication-authors">
+            <span class="author-block">
+              <sup>1</sup>Harvard University&nbsp;&nbsp;&nbsp;
+              <sup>2</sup>Cornell University&nbsp;&nbsp;&nbsp;
+              <sup>3</sup>Microsoft Research&nbsp;&nbsp;&nbsp;
+              <sup>4</sup>Kempner Institute
+            </span>
+          </div>
+
+          <!-- Buttons -->
           <div class="column has-text-centered">
-            <!-- TODO: Replace with your paper title -->
-            <h1 class="title is-1 publication-title">Academic Project Page</h1>
-            <div class="is-size-5 publication-authors">
-              <!-- TODO: Replace with your paper authors and their personal links -->
-              <span class="author-block">
-                <a href="FIRST AUTHOR PERSONAL LINK" target="_blank">First Author</a><sup>*</sup>,</span>
-                <span class="author-block">
-                  <a href="SECOND AUTHOR PERSONAL LINK" target="_blank">Second Author</a><sup>*</sup>,</span>
-                  <span class="author-block">
-                    <a href="THIRD AUTHOR PERSONAL LINK" target="_blank">Third Author</a>
-                  </span>
-                  </div>
+            <div class="publication-links">
 
-                  <div class="is-size-5 publication-authors">
-                    <!-- TODO: Replace with your institution and conference/journal info -->
-                    <span class="author-block">Institution Name<br>Conference name and year</span>
-                    <!-- TODO: Remove this line if no equal contribution -->
-                    <span class="eql-cntrb"><small><br><sup>*</sup>Indicates Equal Contribution</small></span>
-                  </div>
+              <!-- Paper (local PDF) -->
+              <span class="link-block">
+                <a href="static/pdfs/scaling_reward_modeling.pdf" target="_blank"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                  <span>Paper (PDF)</span>
+                </a>
+              </span>
 
-                  <div class="column has-text-centered">
-                    <div class="publication-links">
-                         <!-- TODO: Update with your arXiv paper ID -->
-                      <span class="link-block">
-                        <a href="https://arxiv.org/pdf/<ARXIV PAPER ID>.pdf" target="_blank"
-                        class="external-link button is-normal is-rounded is-dark">
-                        <span class="icon">
-                          <i class="fas fa-file-pdf"></i>
-                        </span>
-                        <span>Paper</span>
-                      </a>
-                    </span>
-
-                    <!-- TODO: Add your supplementary material PDF or remove this section -->
-                    <span class="link-block">
-                      <a href="static/pdfs/supplementary_material.pdf" target="_blank"
-                      class="external-link button is-normal is-rounded is-dark">
-                      <span class="icon">
-                        <i class="fas fa-file-pdf"></i>
-                      </span>
-                      <span>Supplementary</span>
-                    </a>
-                  </span>
-
-                  <!-- TODO: Replace with your GitHub repository URL -->
-                  <span class="link-block">
-                    <a href="https://github.com/YOUR REPO HERE" target="_blank"
-                    class="external-link button is-normal is-rounded is-dark">
-                    <span class="icon">
-                      <i class="fab fa-github"></i>
-                    </span>
-                    <span>Code</span>
-                  </a>
-                </span>
-
-                <!-- TODO: Update with your arXiv paper ID -->
-                <span class="link-block">
-                  <a href="https://arxiv.org/abs/<ARXIV PAPER ID>" target="_blank"
-                  class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                    <i class="ai ai-arxiv"></i>
-                  </span>
+              <!-- arXiv -->
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/YOUR_ARXIV_ID" target="_blank"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="ai ai-arxiv"></i></span>
                   <span>arXiv</span>
                 </a>
               </span>
+
+              <!-- Code (GitHub) -->
+              <span class="link-block">
+                <a href="#" 
+                   class="external-link button is-normal is-rounded is-dark" style="cursor: not-allowed; opacity: 0.6;" onclick="return false;">
+                  <span class="icon"><i class="fab fa-github"></i></span>
+                  <span>Code Coming Soon</span>
+                </a>
+              </span>
+
             </div>
           </div>
+
         </div>
       </div>
     </div>
@@ -314,207 +156,880 @@
 </section>
 
 
-<!-- Teaser video-->
-<section class="hero teaser">
-  <div class="container is-max-desktop">
-    <div class="hero-body">
-      <!-- TODO: Replace with your teaser video -->
-      <video poster="" id="tree" autoplay controls muted loop height="100%" preload="metadata">
-        <!-- TODO: Add your video file path here -->
-        <source src="static/videos/banner_video.mp4" type="video/mp4">
-      </video>
-      <!-- TODO: Replace with your video description -->
-      <h2 class="subtitle has-text-centered">
-        Aliquam vitae elit ullamcorper tellus egestas pellentesque. Ut lacus tellus, maximus vel lectus at, placerat pretium mi. Maecenas dignissim tincidunt vestibulum. Sed consequat hendrerit nisl ut maximus. 
-      </h2>
-    </div>
-  </div>
-</section>
-<!-- End teaser video -->
-
-<!-- Paper abstract -->
-<section class="section hero is-light">
-  <div class="container is-max-desktop">
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">Abstract</h2>
-        <div class="content has-text-justified">
-          <!-- TODO: Replace with your paper abstract -->
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ullamcorper tellus sed ante aliquam tempus. Etiam porttitor urna feugiat nibh elementum, et tempor dolor mattis. Donec accumsan enim augue, a vulputate nisi sodales sit amet. Proin bibendum ex eget mauris cursus euismod nec et nibh. Maecenas ac gravida ante, nec cursus dui. Vivamus purus nibh, placerat ac purus eget, sagittis vestibulum metus. Sed vestibulum bibendum lectus gravida commodo. Pellentesque auctor leo vitae sagittis suscipit.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-<!-- End paper abstract -->
-
-
-<!-- Image carousel -->
-<section class="hero is-small">
-  <div class="hero-body">
-    <div class="container">
-      <div id="results-carousel" class="carousel results-carousel">
-       <div class="item">
-        <!-- TODO: Replace with your research result images -->
-        <img src="static/images/carousel1.jpg" alt="First research result visualization" loading="lazy"/>
-        <!-- TODO: Replace with description of this result -->
-        <h2 class="subtitle has-text-centered">
-          First image description.
+  <!-- Teaser (Figure 1 recommended) -->
+  <!-- <section class="hero teaser">
+    <div class="container is-max-desktop">
+      <div class="hero-body has-text-centered">
+        <img src="static/images/fig1_workflow.png"
+             alt="Schematic overview: reward model training workflow from web math text"
+             style="max-width:90%;height:auto;border-radius:12px;margin-left:35px;" />
+        <h2 class="subtitle has-text-centered" style="margin-top:1rem;">
+          <strong>Reward-based scaling (RBS)</strong> turns raw web documents into online preference pairs by treating
+          the true continuation as “chosen” and in-batch mismatched continuations as “rejected”
         </h2>
       </div>
-      <div class="item">
-        <!-- Your image here -->
-        <img src="static/images/carousel2.jpg" alt="Second research result visualization" loading="lazy"/>
-        <h2 class="subtitle has-text-centered">
-          Second image description.
-        </h2>
-      </div>
-      <div class="item">
-        <!-- Your image here -->
-        <img src="static/images/carousel3.jpg" alt="Third research result visualization" loading="lazy"/>
-        <h2 class="subtitle has-text-centered">
-         Third image description.
-       </h2>
-     </div>
-     <div class="item">
-      <!-- Your image here -->
-      <img src="static/images/carousel4.jpg" alt="Fourth research result visualization" loading="lazy"/>
-      <h2 class="subtitle has-text-centered">
-        Fourth image description.
-      </h2>
     </div>
-  </div>
-</div>
-</div>
-</section>
-<!-- End image carousel -->
+  </section> -->
 
-
-
-
-<!-- Youtube video -->
-<section class="hero is-small is-light">
-  <div class="hero-body">
-    <div class="container">
-      <!-- Paper video. -->
-      <h2 class="title is-3">Video Presentation</h2>
+  <!-- Abstract -->
+  <!-- <section class="section hero is-light" id="abstract">
+    <div class="container is-max-desktop">
       <div class="columns is-centered has-text-centered">
         <div class="column is-four-fifths">
-          
-          <div class="publication-video">
-            <!-- TODO: Replace with your YouTube video ID -->
-            <iframe src="https://www.youtube.com/embed/JkaxUblCGz0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+              Learning from feedback is an instrumental process for advancing the capabilities and safety of frontier models,
+              yet its effectiveness is often constrained by cost and scalability. We present a pilot study that explores scaling
+              reward models through <strong>unsupervised</strong> approaches. We operationalize reward-based scaling (RBS),
+              in its simplest form, as preference learning over document prefixes and suffixes drawn from large-scale web corpora.
+              Despite using no human annotations, training on 11M tokens of math-focused web data yields steady gains on
+              RewardBench v1 and v2, with improvements transferring across diverse initialization backbones spanning
+              model families and scales. When applied to best-of-N selection and policy optimization, these reward models
+              improve downstream math performance and match or exceed strong supervised reward-model baselines of similar size.
+            </p>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
-<!-- End youtube video -->
+  </section> -->
 
+  <!-- Main Content -->
+  <section class="section" id="overview">
+    <div class="container is-max-desktop">
 
-<!-- Video carousel -->
-<section class="hero is-small">
-  <div class="hero-body">
-    <div class="container">
-      <h2 class="title is-3">Another Carousel</h2>
-      <div id="results-carousel" class="carousel results-carousel">
-        <div class="item item-video1">
-          <!-- TODO: Add poster image for better preview -->
-          <video poster="" id="video1" controls muted loop height="100%" preload="metadata">
-            <!-- Your video file here -->
-            <source src="static/videos/carousel1.mp4" type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-video2">
-          <!-- TODO: Add poster image for better preview -->
-          <video poster="" id="video2" controls muted loop height="100%" preload="metadata">
-            <!-- Your video file here -->
-            <source src="static/videos/carousel2.mp4" type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-video3">
-          <!-- TODO: Add poster image for better preview -->
-          <video poster="" id="video3" controls muted loop height="100%" preload="metadata">
-            <!-- Your video file here -->
-            <source src="static/videos/carousel3.mp4" type="video/mp4">
-          </video>
+      <!-- Motivation -->
+      <h3 class="title is-4 has-text-centered">Motivation</h3>
+      <div class="content">
+        <p>
+          Reinforcement learning from human feedback (RLHF) has been central to aligning modern language models, but it hinges on a critical component: the reward signal. High-quality preference data is expensive to collect and annotate. Moreover, even preference labels annotated by human or strong LLM judges can often be subjective and noisy, further amplifying reward hacking behaviors like deception or alignment faking.
+          The table below shows estimated candidate completion and annotation cost instantiated with a GPT-4–class model <code>gpt-4o</code> (Dataset statistics from <a href="#ref-1">[1]</a>).
+          <table class="table is-striped is-hoverable is-fullwidth">
+            <!-- <caption style="caption-side: bottom; text-align: center; padding-top: 0.5rem; font-size: 0.90em;">
+              Table 1. Estimated candidate completion and annotation cost instantiated with a GPT-4–class model <code>gpt-4o</code> (Dataset statistics from <a href="#ref-1">[1]</a>).
+            </caption> -->
+            <thead>
+              <tr>
+                <th>Dataset</th>
+                <th class="has-text-right">#Pairs</th>
+                <th class="has-text-right">Prompt Length</th>
+                <th class="has-text-right">Chosen Length</th>
+                <th class="has-text-right">Rejected Length</th>
+                <th class="has-text-right">Completion Cost ($)</th>
+                <th class="has-text-right">Judge cost ($)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>UltraFeedback</td>
+                <td class="has-text-right">340,025</td>
+                <td class="has-text-right">161.5</td>
+                <td class="has-text-right">279.5</td>
+                <td class="has-text-right">211.1</td>
+                <td class="has-text-right">1,444.36</td>
+                <td class="has-text-right">725.83</td>
+              </tr>
+              <tr>
+                <td>UltraInteract</td>
+                <td class="has-text-right">161,927</td>
+                <td class="has-text-right">507.4</td>
+                <td class="has-text-right">396.6</td>
+                <td class="has-text-right">416.7</td>
+                <td class="has-text-right">1,217.89</td>
+                <td class="has-text-right">616.28</td>
+              </tr>
+            </tbody>
+          </table>
+
+          This motivates a key question: 
+          <strong>how much typical reward-model supervision can be learned in an unsupervised manner?</strong>
+          We propose  <strong>Reward-Based Scaling (RBS)</strong>: an unsupervised framework that converts web text into implicit preferences by treating natural continuations as "chosen samples" and mismatched continuations as in-batch negatives "rejected samples"—producing online preference data at essentially zero annotation cost.
+        </p>
+      </div>
+
+      <hr/>
+
+      <!-- Method -->
+      <h3 class="title is-4 has-text-centered">Method: Continuation-Based Online Preference Pairing</h3>
+      <div class="content">
+        <p>
+          <div class="content">
+            <p>
+              We present an <strong>online, continuation-based preference labeling</strong> approach that turns raw web text into
+              pairwise supervision for training a reward model (RM)—no curated preference pairs or human labels required.
+            </p>
+          
+            <p>
+              The key idea is to reuse <strong>next-token continuation</strong> as an implicit preference signal. For each text sequence,
+              we sample a random breakpoint, split it into a prefix prompt
+              <em>p</em> and its true continuation <em>r</em>.
+              In a minibatch of <em>B</em> prefix–continuation pairs
+              <span style="white-space: nowrap;">{(<em>p</em><sub>i</sub>, <em>r</em><sub>i</sub>)}</span><sub>i=1</sub><sup>B</sup>,
+              we treat <em>r</em><sub>i</sub> as the chosen response for <em>p</em><sub>i</sub>, and use the other continuations
+              <span style="white-space: nowrap;">{<em>r</em><sub>j</sub>}</span><sub>j &ne; i</sub>
+              as rejected in-batch negatives. This creates an all-to-all set of preference comparisons on the fly.
+            </p>
+
+            <p>
+              Given an RM score \(s_\theta(p,r)\), we optimize a <strong>Bradley–Terry (pairwise logistic)</strong>
+              objective with in-batch negatives:
+            </p>
+          
+            <div class="equation">
+              \[
+                \mathcal{L}_{\text{BT}}
+                = \frac{1}{B}\sum_{i=1}^{B}\frac{1}{B-1}\sum_{j\neq i}
+                -\log \sigma\!\big(s_{\theta}(p_i, r_i) - s_{\theta}(p_i, r_j)\big).
+              \]
+            </div>
+            <p>
+              with a quadratic <strong>score-centering regularizer</strong> to prevent
+              reward drift and overly confident, large-magnitude scores:
+            </p>
+          
+            <div class="equation">
+              \[
+                \mathcal{L}_{\text{center}} =
+                \mathbb{E}\Big[ s_{\theta}(p_i,r_i)^2 + \frac{1}{B-1}\sum_{j\neq i} s_{\theta}(p_i,r_j)^2 \Big].
+              \]
+            </div>
+          
+            <p>
+              Making up our final training objective: 
+              \( \mathcal{L}=\mathcal{L}_{\text{BT}} + c\,\mathcal{L}_{\text{center}} \), where \(c\) controls the strength of centering.
+            </p>
+          
+            <!-- <p>
+              where \(c\) controls the strength of centering. In practice, this constraint makes RM training
+              <strong>more stable and robust</strong> on raw web data by reducing overfitting to corpus artifacts and
+              keeping scores comparable across diverse prompts.
+            </p> -->
+          </div>
+          
+        </p>
+      </div>
+
+      <div class="columns is-vcentered is-variable is-6">
+        <div class="column">
+          <figure class="image">
+            <img src="static/images/fig1_workflow.png"
+                 alt="Workflow diagram showing prefix/suffix splitting and in-batch preference pairing" />
+          </figure>
+          <!-- <p class="has-text-centered is-size-6" style="margin-top:0.5rem;">
+            Figure 1: Online preference pairing from web text (export from paper).
+          </p> -->
         </div>
       </div>
+
+      <hr/>
+
+      <h3 class="title is-4 has-text-centered">Protocol</h3>
+      <div class="content">
+        <p>
+          We evaluate our RM training recipe with a unified protocol spanning training, preference-alignment benchmarking, and downstream utility evaluation(best-of-N selection and RL).
+        </p>
+
+        <h4 class="title is-5">Data and RM Backbones</h4>
+        <p>
+          <strong>Training corpora.</strong> We train RMs on math-heavy web text from FineMath and InfiMM-WebMath
+          under a fixed budget of 11M tokens. Data entries are concatenated into a continuous stream,
+          chunked into fixed-length sequences of <em>L</em> tokens, and split into
+          prefix–suffix pairs with <em>L<sub>1</sub></em> prompt and <em>L<sub>2</sub></em> continuation tokens.
+        </p>
+        <p>
+          <strong>Backbones.</strong> To test robustness across model types and scales, we train RMs
+          from two backbone families:
+        </p>
+        <ul>
+          <li><strong>Base:</strong> Llama-3.2-1B, Llama-3.2-3B</li>
+          <li><strong>Instruction-tuned:</strong> Qwen2.5-3B-Instruct, Qwen2.5-7B-Instruct</li>
+        </ul>
+
+        <h4 class="title is-5">Preference-Alignment Benchmarks</h4>
+        <p>
+          We evaluate preference alignment on <strong>RewardBench v1</strong> and <strong>RewardBench v2</strong>.
+          As our training data is math-focused, we report RewardBench subsets performance categorized into in-domain (ID) and out-of-domain (OOD). Specifically at the 4 following levels:
+        </p>
+        <ul>
+          <li><strong>Overall:</strong> average across all subsets</li>
+          <li><strong>ID:</strong> <code>Reasoning</code> subset for RewardBench v1 and <code>Math</code> subset for RewardBench v2</li>
+          <li><strong>OOD-Safety:</strong> <code>Safety</code> subsets for both RewardBench v1 and v2</li>
+          <li><strong>OOD-Others:</strong> other subsets aggregated</li>
+        </ul>
+
+        <section>
+          <h3>Downstream Utility: Best-of-<em>N</em> Selection</h3>
+        
+          <p>
+            <strong>Tasks.</strong>
+            ID: MATH500, GSM8K. OOD-Safety: Toxigen, IFEval.
+          </p>
+        
+          <p>
+            <strong>Protocol.</strong>
+            We evaluate two trained reward models (<code>FineMath-RM-Llama-3.2-3B</code> and <code>FineMath-RM-Qwen-2.5-7B</code>)
+            using best-of-<em>N</em>: for each input, we sample <em>N</em> candidate solutions from an actor, score each candidate
+            with the RM, and evaluate the highest-scoring selection. We sweep
+            <em>N</em> &isin; {1, 2, 4, 8, 16, 32} using three actors:
+            <code>Llama-3.2-1B-Instruct</code>, <code>Llama-3.2-3B-Instruct</code>, and <code>Llama-3.1-8B-Instruct</code>.
+          </p>
+        
+          <p>
+            <strong>Metric.</strong>
+            Accuracy as a function of <em>N</em>; we summarize with <strong>MAP</strong>, the maximum accuracy achieved along the
+            best-of-<em>N</em> curve.
+          </p>
+        </section>
+        <br/>
+        <section>
+          <h3>Downstream Utility: Policy Optimization</h3>
+        
+          <p>
+            <strong>Tasks.</strong>
+            To assess how well the RM serves as a learning signal for <em>actor training</em>, we train actors on the MATH and GSM8K
+  training splits and evaluate generalization on the corresponding test splits.
+          </p>
+        
+          <p>
+            <strong>Protocol.</strong>
+            We train actors with GRPO using <code>FineMath-RM-Qwen-2.5-7B</code> to provide the reward signal. We generate rollouts with
+            <code>Llama-3.2-3B-Instruct</code> and <code>Llama-3.1-8B-Instruct</code> actors under a fixed epoch budget.
+          </p>
+        
+          <p>
+            <strong>Metric.</strong>
+            <strong>mean@1</strong> accuracy on the corresponding test sets.
+          </p>
+        </section>
+        
+      <hr/>
+
+      <!-- Experiments / Results -->
+      <h3 class="title is-4 has-text-centered">Data Scaling</h3>
+
+      <div class="content">
+        <ul>
+          In a controlled study on Llama-3.2-3B, training with our method on FineMath shows steady performance gains on all subsets of RewardBench v1 and v2 over the 11M-token budget, indicating that raw math web text can provide a useful preference-learning signal even without curated comparison data (left).
+          <br/>
+          Moreover, we find that the recipe transfers well across model families and scales. When compared within parameter-matched cohorts, all trained RMs rank strongly—top-10 on RewardBench v2 in their respective cohort—and show similarly consistent competitiveness on RewardBench v1, indicating robust cross-backbone transfer (right).
+        </ul>
+      </div>
+
+      <!-- Figure 2 -->
+      <!-- <div class="columns is-centered">
+        <div class="column is-10">
+          <figure class="image">
+            <img src="static/images/fig2_scaling.png"
+                 alt="Scalability with respect to data size: RewardBench v1/v2 vs token budget" />
+          </figure> -->
+          <!-- <p class="has-text-centered is-size-6" style="margin-top:0.5rem;">
+            Figure 2. Scalability of our method with respect to data size.
+          </p> -->
+        <!-- </div>
+      </div>
+       -->
+
+       <style>
+        /* Booktabs-like table styling (matches your screenshot) */
+        .rb-booktabs {
+          width: 100%;
+          border-collapse: collapse;
+          font-family: inherit;
+          font-size: 0.95rem;
+          line-height: 1.15;
+          border-top: 2px solid #111;     /* top rule */
+          border-bottom: 2px solid #111;  /* bottom rule */
+        }
+      
+        .rb-booktabs th,
+        .rb-booktabs td {
+          padding: 0.35rem 0.5rem;
+          border: none;                  /* no vertical lines */
+          vertical-align: middle;
+          white-space: nowrap;
+        }
+      
+        .rb-booktabs thead th {
+          font-weight: 700;
+        }
+      
+        /* thin rule under the header (midrule) */
+        .rb-booktabs thead {
+          border-bottom: 1px solid #111;
+        }
+      
+        /* group headers: RB v1 / RB v2 with partial underline (cmidrule-like) */
+        .rb-booktabs th.group {
+          text-align: center;
+          position: relative;
+          padding-bottom: 0.55rem;
+        }
+        .rb-booktabs th.group::after {
+          content: "";
+          position: absolute;
+          left: 12%;
+          right: 12%;
+          bottom: 0.2rem;
+          border-bottom: 1px solid #111;
+        }
+      
+        .rb-booktabs th.left {
+          text-align: left;
+        }
+      
+        .rb-booktabs td.left {
+          text-align: left;
+        }
+      
+        .rb-booktabs td.num,
+        .rb-booktabs th.num {
+          text-align: center; /* screenshot looks centered */
+        }
+      </style>
+      
+      <div class="container is-max-desktop">
+      <div class="columns is-vcentered">
+        <!-- Plot (bigger, left-aligned) -->
+        <div class="column is-8" style="display: flex; align-items: flex-start;">
+          <figure class="image" style="margin-left: 0;">
+            <img
+              src="static/images/fig2_scaling.png"
+              alt="Scalability with respect to data size: RewardBench v1/v2 vs token budget"
+            />
+          </figure>
+        </div>
+      
+        <!-- Table (smaller) -->
+        <div class="column is-3">
+          <div style="max-width: 380px; margin: 0 auto;">
+            <table class="rb-booktabs">
+              <thead>
+                <tr>
+                  <th class="left" rowspan="2">Backbone</th>
+                  <th class="group" colspan="2">RB v1</th>
+                  <th class="group" colspan="2">RB v2</th>
+                </tr>
+                <tr>
+                  <th class="num">Score</th>
+                  <th class="num">Rank</th>
+                  <th class="num">Score</th>
+                  <th class="num">Rank</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="left">Llama-3.1-1B</td>
+                  <td class="num">60.0</td>
+                  <td class="num">3</td>
+                  <td class="num">33.2</td>
+                  <td class="num">3</td>
+                </tr>
+                <tr>
+                  <td class="left">Llama-3.1-3B</td>
+                  <td class="num">65.6</td>
+                  <td class="num">4</td>
+                  <td class="num">36.2</td>
+                  <td class="num">9</td>
+                </tr>
+                <tr>
+                  <td class="left">Qwen2.5-3B-Inst.</td>
+                  <td class="num">70.0</td>
+                  <td class="num">3</td>
+                  <td class="num">46.2</td>
+                  <td class="num">8</td>
+                </tr>
+                <tr>
+                  <td class="left">Qwen2.5-7B-Inst.</td>
+                  <td class="num">73.8</td>
+                  <td class="num">18</td>
+                  <td class="num">57.0</td>
+                  <td class="num">5</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      </div>
+      
+      
+
+      <hr/>
+
+      <!-- Ablations -->
+      <h3 class="title is-4 has-text-centered">Recipe Ablations</h3>
+      <div class="content">
+        <p>
+          We ablate key factors in the training pipeline:
+          <strong>batch size</strong>, <strong>data quality</strong>, <strong>splitting format</strong>
+          and <strong>centering loss</strong>.
+        </p>
+      </div>
+           <div class="content">
+             <p>
+               <strong>Increasing batch size in our online preference pairing scheme boosts reward model performance </strong> because each update gets <span><em>B</em></span> positives and <span><em>B</em>(<em>B</em>&minus;1)</span> cross-pair negatives, making supervision grow nearly quadratically with <span><em>B</em></span>. In experiments, larger batches yield higher and more stable RewardBench v2 gains—ID keeps improving with <span><em>B</em></span>, while OOD benefits mostly saturate beyond <span><em>B</em>=16</span>.
+             </p>
+           </div>
+           <!-- Ablation: Batch size (table left) + curves right -->
+<div class="columns is-vcentered is-variable is-6" style="align-items: stretch;">
+
+  <!-- Left: Table -->
+  <div class="column is-4" style="display:flex;">
+    <div style="width:100%; display:flex; flex-direction:column; justify-content:center;">
+      <table class="table is-narrow is-fullwidth paperlike-table">
+        <thead>
+          <tr>
+            <th>batch size</th>
+            <th class="has-text-right">ID</th>
+            <th class="has-text-right">OOD Safety</th>
+            <th class="has-text-right">OOD others</th>
+            <th class="has-text-right">RBv2</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>8</td>
+            <td class="has-text-right">+9.6</td>
+            <td class="has-text-right">+3.4</td>
+            <td class="has-text-right">+0.6</td>
+            <td class="has-text-right">+1.0</td>
+          </tr>
+          <tr>
+            <td>16</td>
+            <td class="has-text-right">+10.7</td>
+            <td class="has-text-right"><strong>+8.3</strong></td>
+            <td class="has-text-right"><strong>+7.7</strong></td>
+            <td class="has-text-right"><strong>+6.7</strong></td>
+          </tr>
+          <tr>
+            <td><strong>32</strong></td>
+            <td class="has-text-right"><strong>+16.1</strong></td>
+            <td class="has-text-right">+5.4</td>
+            <td class="has-text-right">+7.4</td>
+            <td class="has-text-right"><strong>+7.7</strong></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- <p class="has-text-centered is-size-7" style="margin-top:0.25rem; opacity:0.85;">
+        (a) Peak RewardBench v2 subset and average gains vs. batch size.
+      </p> -->
     </div>
   </div>
-</section>
-<!-- End video carousel -->
+
+  <!-- Right: Curves -->
+  <div class="column is-8" style="display:flex;">
+    <div style="width:100%; display:flex; flex-direction:column; justify-content:center;">
+      <figure class="image" style="margin:0;">
+        <img src="static/images/fig3_batchsize.png"
+             alt="RewardBench v2 learning curves across 11M token budget vs. batch size"
+             style="width:100%; height:auto; max-height:320px; object-fit:contain;" />
+      </figure>
+
+      <!-- <p class="has-text-centered is-size-7" style="margin-top:0.25rem; opacity:0.85;">
+        (b) RewardBench v2 learning curves across 11M tokens vs. batch size.
+      </p> -->
+    </div>
+  </div>
+
+</div>
+
+<p style="margin-top:1.5rem; margin-bottom:0.5rem; font-size:1.08em; text-align:left;">
+  <strong>Higher-quality raw math text yields larger reward-model gains.</strong> <code>FineMath-4plus</code> consistently outperforms <code>Infiwebmath-4plus</code> with bigger ID/OOD improvements and a higher average RewardBench v2 boost, while also learning more steadily over the 11M-token budget.
+</p>
 
 
+<!-- Ablation: Dataset choice (table left) + curves right -->
+<div class="columns is-vcentered is-variable is-6" style="align-items: stretch;">
+
+  <!-- Left: Table -->
+  <div class="column is-4" style="display:flex;">
+    <div style="width:100%; display:flex; flex-direction:column; justify-content:center;">
+      <table class="table is-narrow is-fullwidth paperlike-table">
+        <thead>
+          <tr>
+            <th>Dataset</th>
+            <th class="has-text-right">ID</th>
+            <th class="has-text-right">OOD Safety</th>
+            <th class="has-text-right">OOD others</th>
+            <th class="has-text-right">RBv2</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="white-space: normal;">
+              infiweb<wbr>math
+            </td>
+            <td class="has-text-right">+14.2</td>
+            <td class="has-text-right">+4.4</td>
+            <td class="has-text-right">+5.1</td>
+            <td class="has-text-right">+5.3</td>
+          </tr>
+          <tr>
+            <td><strong>finemath</strong></td>
+            <td class="has-text-right"><strong>+16.1</strong></td>
+            <td class="has-text-right"><strong>+5.4</strong></td>
+            <td class="has-text-right"><strong>+7.4</strong></td>
+            <td class="has-text-right"><strong>+7.7</strong></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- <p class="has-text-centered is-size-7" style="margin-top:0.25rem; opacity:0.85;">
+        (a) Peak RewardBench v2 subset and average gains vs. dataset choice.
+      </p> -->
+    </div>
+  </div>
+
+  <!-- Right: Curves -->
+  <div class="column is-8" style="display:flex;">
+    <div style="width:100%; display:flex; flex-direction:column; justify-content:center;">
+      <figure class="image" style="margin:0;">
+        <img src="static/images/fig4_dataquality.png"
+             alt="RewardBench v2 learning curves across 11M token budget vs. training datasets"
+             style="width:100%; height:auto; max-height:320px; object-fit:contain;" />
+      </figure>
+
+      <!-- <p class="has-text-centered is-size-7" style="margin-top:0.25rem; opacity:0.85;">
+        (b) RewardBench v2 learning curves across 11M tokens vs. training datasets.
+      </p> -->
+    </div>
+  </div>
+
+</div>
+
+      <p style="margin-top:1.25rem;">
+        <strong>Allowing mid-sentence splits (&ldquo;break sentence&rdquo;) produces substantially larger RewardBench v2 gains than splitting only at sentence boundaries, improving both ID and OOD performance.</strong> This is likely because break-sentence batching creates harder, more contextually confusable in-batch negatives, forcing the reward model to learn finer-grained semantic consistency.
+      </p>
 
 
+      <!-- Ablation: table (left) + plot (right) -->
+<div class="columns is-vcentered is-variable is-6" style="align-items: stretch;">
 
+  <!-- Left: Table panel -->
+  <div class="column is-4" style="display:flex;">
+    <div style="width:100%; display:flex; flex-direction:column; justify-content:center;">
+      <table class="table is-narrow is-fullwidth">
+        <thead>
+          <tr>
+            <th>Splitting</th>
+            <th class="has-text-right">ID</th>
+            <th class="has-text-right">OOD Safety</th>
+            <th class="has-text-right">OOD Others</th>
+            <th class="has-text-right">RBv2</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>preserve sentence</td>
+            <td class="has-text-right">+4.6</td>
+            <td class="has-text-right">+1.7</td>
+            <td class="has-text-right">+3.5</td>
+            <td class="has-text-right">+0.8</td>
+          </tr>
+          <tr>
+            <td><strong>break sentence</strong></td>
+            <td class="has-text-right"><strong>+16.1</strong></td>
+            <td class="has-text-right"><strong>+5.4</strong></td>
+            <td class="has-text-right"><strong>+7.4</strong></td>
+            <td class="has-text-right"><strong>+7.7</strong></td>
+          </tr>
+        </tbody>
+      </table>
 
-<!-- Paper poster -->
-<section class="hero is-small is-light">
-  <div class="hero-body">
-    <div class="container">
-      <h2 class="title">Poster</h2>
+      <!-- <p class="has-text-centered is-size-7" style="margin-top:0.25rem; opacity:0.85;">
+        (a) Peak RBv2 subset gains vs. splitting design.
+      </p> -->
+    </div>
+  </div>
 
-      <!-- TODO: Replace with your poster PDF -->
-      <iframe  src="static/pdfs/sample.pdf" width="100%" height="550">
-          </iframe>
-        
+  <!-- Right: Plot panel -->
+  <div class="column is-8" style="display:flex;">
+    <div style="width:100%; display:flex; flex-direction:column; justify-content:center;">
+      <figure class="image" style="margin:0;">
+        <!-- Use a single combined plot image from the paper if you have it -->
+        <img src="static/images/fig5_splitting.png"
+             alt="RewardBench v2 learning curves vs. data splitting design"
+             style="width:100%; height:auto; max-height:320px; object-fit:contain;" />
+      </figure>
+
+      <!-- <p class="has-text-centered is-size-7" style="margin-top:0.25rem; opacity:0.85;">
+        (b) RBv2 learning curves across 11M tokens vs. splitting design.
+      </p> -->
+    </div>
+  </div>
+
+</div>
+
+<p style="margin-top:1.25rem;">
+  <strong>Adding the score-centering regularizer stabilizes reward-model training on noisy web text and improves overall RewardBench v2 peak gains </strong> (+7.7 vs. +6.4), whereas removing it yields uneven, less reliable improvements. Centering also makes best-of-(N) selection much more dependable—boosting GSM8K (<span style="font-family:monospace;">ΔMAP</span>, +5.2 vs. +2.8) and avoiding the large-(N) degradation seen with uncentered rewards.
+</p>
+
+<!-- Ablation: Centering loss (table left) + curves right -->
+<div class="columns is-vcentered is-variable is-6" style="align-items: stretch;">
+
+  <!-- Left: Table -->
+  <div class="column is-3.1" style="display:flex;">
+    <div style="width:100%; display:flex; flex-direction:column; justify-content:center;">
+      <table class="table is-narrow is-fullwidth paperlike-table">
+        <thead>
+          <tr>
+            <th>Centering</th>
+            <th class="has-text-right">ID</th>
+            <th class="has-text-right">OOD Safety</th>
+            <th class="has-text-right">OOD others</th>
+            <th class="has-text-right">RBv2</th>
+            <th class="has-text-right">BoN</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>w/o centering</td>
+            <td class="has-text-right"><strong>+16.9</strong></td>
+            <td class="has-text-right"><strong>+5.9</strong></td>
+            <td class="has-text-right"><strong>+8.6</strong></td>
+            <td class="has-text-right">+6.4</td>
+            <td class="has-text-right">+2.8</td>
+          </tr>
+          <tr>
+            <td><strong>w/ centering</strong></td>
+            <td class="has-text-right">+16.4</td>
+            <td class="has-text-right">+5.7</td>
+            <td class="has-text-right">+7.4</td>
+            <td class="has-text-right"><strong>+7.7</strong></td>
+            <td class="has-text-right"><strong>+5.4</strong></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- <p class="has-text-centered is-size-7" style="margin-top:0.25rem; opacity:0.85;">
+        (a) Peak RBv2 subsets, average gains, and BoN max achieved performance (MAP) gain vs. centering loss.
+      </p> -->
+    </div>
+  </div>
+
+  <!-- Right: Curves -->
+  <div class="column is-8" style="display:flex;">
+    <div style="width:100%; display:flex; flex-direction:column; justify-content:center; margin-left:auto;">
+      <figure class="image" style="margin:0;">
+        <img src="static/images/fig6_centering.png"
+             alt="RewardBench v2 learning curves across 11M token budget vs. centering loss"
+             style="width:100%; height:auto; max-height:320px; object-fit:contain;" />
+      </figure>
+
+      <!-- <p class="has-text-centered is-size-7" style="margin-top:0.25rem; opacity:0.85;">
+        (b) RewardBench v2 learning curves across 11M tokens vs. centering loss.
+      </p> -->
+    </div>
+  </div>
+
+</div>
+
+      <!-- <div class="columns is-variable is-6 is-multiline">
+        <div class="column is-6">
+          <figure class="image">
+            <img src="static/images/fig3_batchsize.png" alt="Effect of batch size on RewardBench v2 gains" />
+          </figure>
+          <p class="has-text-centered is-size-6" style="margin-top:0.5rem;">Figure 3: Batch size effect.</p>
+        </div>
+        <div class="column is-6">
+          <figure class="image">
+            <img src="static/images/fig4_dataquality.png" alt="Effect of dataset quality (FineMath vs Infiwebmath)" />
+          </figure>
+          <p class="has-text-centered is-size-6" style="margin-top:0.5rem;">Figure 4: Data quality effect.</p>
+        </div>
+        <div class="column is-6">
+          <figure class="image">
+            <img src="static/images/fig5_splitting.png" alt="Effect of preserve sentence vs break sentence splitting" />
+          </figure>
+          <p class="has-text-centered is-size-6" style="margin-top:0.5rem;">Figure 5: Splitting design effect.</p>
+        </div>
+        <div class="column is-6">
+          <figure class="image">
+            <img src="static/images/fig6_centering.png" alt="Effect of centering loss on stability and BoN MAP" />
+          </figure>
+          <p class="has-text-centered is-size-6" style="margin-top:0.5rem;">Figure 6: Centering loss effect.</p>
+        </div>
+      </div> -->
+
+      <hr/>
+
+      <!-- Best-of-N -->
+      <h3 class="title is-4 has-text-centered">Best-of-N Selection</h3>
+      <div class="content">
+        <p>
+        <strong>RMs trained using our recipe provide strong best-of-<em>N</em> selection signals on both in-domain math tasks (GSM8K, MATH500) and out-of-domain settings (Toxigen, IFEval) </strong>, with BoN improvements becoming clearer and more monotonic as the actor model gets larger and more capable. 
+        We also compare against two strong baselines, <code>Skywork-Reward-V2-Llama-3.2-3B</code> and <code>Skywork-Reward-V2-Llama-3.1-8B</code> trained from 26M high-quality curated preference pairs.
+        While Skywork models are usually stronger in absolute terms, the gap shrinks with stronger actors—and our <code>FineMath-RM-Qwen-2.5-7B</code> is competitive with (and sometimes surpasses) a Skywork baseline on MATH500 and Toxigen, despite using only noisy, unlabeled web text.
+        </p>
       </div>
+
+      <div class="columns is-centered">
+        <div class="column is-9">
+          <figure class="image">
+            <img src="static/images/fig8_bon_scaling.png" alt="BoN scaling curves across tasks and actors" />
+          </figure>
+          <!-- <p class="has-text-centered is-size-6" style="margin-top:0.5rem;">
+            Figure 8: BoN scaling curves (export from paper).
+          </p> -->
+        </div>
+      </div>
+
+      <hr/>
+
+      <!-- Actor training -->
+      <h3 class="title is-4 has-text-centered">Policy Optimization with GRPO</h3>
+      <div class="content">
+        <p>
+          <strong><code>FineMath-RM-Qwen-2.5-7B</code> trained using our recipe provides a reliable reward signal for actor training, consistently improving mean@1 accuracy on GSM8K and MATH across both <code>Llama-3.2-3B-Instruct</code> and <code>Llama-3.1-8B-Instruct</code> actors.</strong>
+          It often achieves the best or second-best results when compared against strong off-the-shelf reward model baselines. 
+          The untrained “-Init” control is consistently the weakest, showing that the gains come from the learned reward signal rather than initialization. 
+          While Skywork reward models remain stronger overall—especially on MATH—our web-trained RM is still competitive despite using no curated preference data.
+        </p>
+      </div>
+
+      <!-- Transfer across backbones table (no figure) -->
+<!-- BoN / actor-selection results table (no figure) -->
+<div class="columns is-centered">
+  <div class="column is-10">
+
+    <table class="table is-narrow is-fullwidth paperlike-table bon-table">
+      <thead>
+        <tr>
+          <th rowspan="2"></th>
+          <th colspan="2" class="has-text-centered">Actor: Llama-3.2-3B-Instruct</th>
+          <th colspan="2" class="has-text-centered">Actor: Llama-3.1-8B-Instruct</th>
+        </tr>
+        <tr>
+          <th class="has-text-centered">MATH</th>
+          <th class="has-text-centered">GSM8K</th>
+          <th class="has-text-centered">MATH</th>
+          <th class="has-text-centered">GSM8K</th>
+        </tr>
+        <tr>
+          <td colspan="5" style="padding:0;"><hr style="margin:0 0 2px 0; border-top: 2px solid #bbb; border-bottom: none;"></td>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>Before training</td>
+          <td class="has-text-centered">0.268</td>
+          <td class="has-text-centered">0.789</td>
+          <td class="has-text-centered">0.423</td>
+          <td class="has-text-centered">0.876</td>
+        </tr>
+
+        <!-- midrule -->
+        <tr class="midrule">
+          <td>Skywork-Reward-V2-Llama-3.1-8B</td>
+          <td class="has-text-centered">0.419</td>
+          <td class="has-text-centered"><strong>0.833</strong></td>
+          <td class="has-text-centered"><u>0.447</u></td>
+          <td class="has-text-centered">0.882</td>
+        </tr>
+        <tr>
+          <td>Skywork-Reward-V2-Llama-3.2-3B</td>
+          <td class="has-text-centered"><strong>0.439</strong></td>
+          <td class="has-text-centered">0.819</td>
+          <td class="has-text-centered"><strong>0.465</strong></td>
+          <td class="has-text-centered"><u>0.884</u></td>
+        </tr>
+
+        <!-- section break -->
+        <tr class="midrule">
+          <td><strong>FineMath-RM-Qwen-2.5-7B</strong></td>
+          <td class="has-text-centered"><u>0.420</u></td>
+          <td class="has-text-centered"><u>0.823</u></td>
+          <td class="has-text-centered">0.437</td>
+          <td class="has-text-centered"><strong>0.886</strong></td>
+        </tr>
+        <tr>
+          <td>FineMath-RM-Qwen-2.5-7B-Init</td>
+          <td class="has-text-centered">0.399</td>
+          <td class="has-text-centered">0.812</td>
+          <td class="has-text-centered">0.428</td>
+          <td class="has-text-centered">0.879</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- <p class="has-text-centered is-size-6" style="margin-top:0.5rem;">
+      BoN selection performance (MAP) across actors and tasks.
+    </p> -->
+
+  </div>
+</div>
+
+
+
+      <hr/>
+
+      <!-- Release note -->
+      <!-- <h3 class="title is-4 has-text-centered">Reproducibility & Release</h3>
+      <div class="content">
+        <p>
+          Dataset and code will be released after the double-blind review period ends.
+        </p>
+      </div>
+
+    </div> -->
+  </section>
+
+  <!-- References -->
+  <section class="section" id="references">
+    <div class="container is-max-desktop content">
+      <h2 class="title">References</h2>
+      <ol>
+        <li id="ref-1">
+          <span>
+            Dong, H., Xiong, W., Pang, B., Wang, H., Zhao, H., Zhou, Y., Jiang, N., Sahoo, D., Xiong, C., &amp; Zhang, T.
+            (2024). <em>RLHF Workflow: From Reward Modeling to Online RLHF</em>. arXiv:2405.07863.
+            <a href="https://arxiv.org/abs/2405.07863" target="_blank" rel="noopener noreferrer">https://arxiv.org/abs/2405.07863</a>
+          </span>
+        </li>
+      </ol>
     </div>
   </section>
-<!--End paper poster -->
 
-
-
-<!--BibTex citation -->
+  <!-- BibTeX -->
   <section class="section" id="BibTeX">
     <div class="container is-max-desktop content">
-      <div class="bibtex-header">
-        <h2 class="title">BibTeX</h2>
-        <button class="copy-bibtex-btn" onclick="copyBibTeX()" title="Copy BibTeX to clipboard">
-          <i class="fas fa-copy"></i>
-          <span class="copy-text">Copy</span>
-        </button>
-      </div>
-      <pre id="bibtex-code"><code>@article{YourPaperKey2024,
-  title={Your Paper Title Here},
-  author={First Author and Second Author and Third Author},
-  journal={Conference/Journal Name},
-  year={2024},
-  url={https://your-domain.com/your-project-page}
+      <h2 class="title">BibTeX</h2>
+      <pre><code>@misc{anonymous2026scalingrewardmodeling,
+  title   = {Scaling Reward Modeling without Human Supervision},
+  author  = {Anonymous Authors},
+  note    = {Under review},
+  year    = {2026}
 }</code></pre>
+      <p class="is-size-7" style="opacity:0.8;">
+        Replace with the final BibTeX (authors/venue/arXiv/OpenReview link) once available.
+      </p>
     </div>
-</section>
-<!--End BibTex citation -->
-
+  </section>
 
   <footer class="footer">
-  <div class="container">
-    <div class="columns is-centered">
-      <div class="column is-8">
-        <div class="content">
-
-          <p>
-            This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a> which was adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
-            You are free to borrow the source code of this website, we just ask that you link back to this page in the footer. <br> This website is licensed under a <a rel="license"  href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative
-            Commons Attribution-ShareAlike 4.0 International License</a>.
-          </p>
-
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-8">
+          <div class="content">
+            <p>
+              This page was built using the
+              <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">
+                Academic Project Page Template
+              </a>,
+              adapted from <a href="https://nerfies.github.io" target="_blank">Nerfies</a>.
+              Please link back in the footer if you reuse it. <br />
+              This website is licensed under a
+              <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">
+                Creative Commons Attribution-ShareAlike 4.0 International License
+              </a>.
+            </p>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</footer>
+  </footer>
 
-<!-- Statcounter tracking code -->
-  
-<!-- You can add a tracker to track page visits by creating an account at statcounter.com -->
-
-    <!-- End of Statcounter Code -->
-
-  </body>
-  </html>
+</body>
+</html>
