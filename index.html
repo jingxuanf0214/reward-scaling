@@ -45,6 +45,33 @@
 </head>
 
 <body>
+<!-- Mobile menu toggle (shows on small screens) -->
+<button class="side-toggle button is-dark is-small" id="sideToggle" aria-label="Toggle menu">
+  ☰ Menu
+</button>
+
+<div class="page-shell">
+  <!-- Sidebar -->
+  <aside class="side-nav" id="sideNav">
+    <nav class="menu">
+      <p class="menu-label">On this page</p>
+      <ul class="menu-list">
+        <li><a href="#motivation">Motivation</a></li>
+        <li><a href="#method">Method</a></li>
+        <li><a href="#protocol">Protocol</a></li>
+        <li><a href="#data-scaling">Data Scaling</a></li>
+        <li><a href="#ablations">Ablations</a></li>
+        <li><a href="#bon">Best-of-N</a></li>
+        <li><a href="#grpo">GRPO</a></li>
+        <li><a href="#references">References</a></li>
+        <li><a href="#BibTeX">BibTeX</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Main content wrapper -->
+  <main class="page-main">
+    <!-- KEEP ALL YOUR EXISTING CONTENT HERE (hero + sections + footer) -->
 
   <!-- Header / Hero -->
   <!-- ===== HERO (replace your current hero section content with this) ===== -->
@@ -199,7 +226,7 @@
     <div class="container is-max-desktop">
 
       <!-- Motivation -->
-      <h3 class="title is-4 has-text-centered">Motivation</h3>
+      <h3 class="title is-4 has-text-centered" id="motivation">Motivation</h3>
       <div class="content">
         <p>
           Reinforcement learning from human feedback (RLHF) has been central to aligning modern language models, but it hinges on a critical component: the reward signal. High-quality preference data is expensive to collect and annotate. Moreover, even preference labels annotated by human or strong LLM judges can often be subjective and noisy, further amplifying reward hacking behaviors like deception or alignment faking.
@@ -250,7 +277,7 @@
       <hr/>
 
       <!-- Method -->
-      <h3 class="title is-4 has-text-centered">Method: Continuation-Based Online Preference Pairing</h3>
+      <h3 class="title is-4 has-text-centered" id="method">Method: Continuation-Based Online Preference Pairing</h3>
       <div class="content">
         <p>
           <div class="content">
@@ -323,7 +350,7 @@
 
       <hr/>
 
-      <h3 class="title is-4 has-text-centered">Protocol</h3>
+      <h3 class="title is-4 has-text-centered" id="protocol">Protocol</h3>
       <div class="content">
         <p>
           We evaluate our RM training recipe with a unified protocol spanning training, preference-alignment benchmarking, and downstream utility evaluation(best-of-N selection and RL).
@@ -405,7 +432,7 @@
       <hr/>
 
       <!-- Experiments / Results -->
-      <h3 class="title is-4 has-text-centered">Data Scaling</h3>
+      <h3 class="title is-4 has-text-centered" id="data-scaling">Data Scaling</h3>
 
       <div class="content">
         <ul>
@@ -557,7 +584,7 @@
       <hr/>
 
       <!-- Ablations -->
-      <h3 class="title is-4 has-text-centered">Recipe Ablations</h3>
+      <h3 class="title is-4 has-text-centered" id="ablations">Recipe Ablations</h3>
       <div class="content">
         <p>
           We ablate key factors in the training pipeline:
@@ -855,7 +882,7 @@
       <hr/>
 
       <!-- Best-of-N -->
-      <h3 class="title is-4 has-text-centered">Best-of-N Selection</h3>
+      <h3 class="title is-4 has-text-centered" id="bon">Best-of-N Selection</h3>
       <div class="content">
         <p>
         <strong>RMs trained using our recipe provide strong best-of-<em>N</em> selection signals on both in-domain math tasks (GSM8K, MATH500) and out-of-domain settings (Toxigen, IFEval) </strong>, with BoN improvements becoming clearer and more monotonic as the actor model gets larger and more capable. 
@@ -878,7 +905,7 @@
       <hr/>
 
       <!-- Actor training -->
-      <h3 class="title is-4 has-text-centered">Policy Optimization with GRPO</h3>
+      <h3 class="title is-4 has-text-centered" id="grpo">Policy Optimization with GRPO</h3>
       <div class="content">
         <p>
           <strong><code>FineMath-RM-Qwen-2.5-7B</code> trained using our recipe provides a reliable reward signal for actor training, consistently improving mean@1 accuracy on GSM8K and MATH across both <code>Llama-3.2-3B-Instruct</code> and <code>Llama-3.1-8B-Instruct</code> actors.</strong>
@@ -1030,6 +1057,27 @@
       </div>
     </div>
   </footer>
+
+</main>
+</div>
+<script>
+  // Mobile drawer toggle
+  const sideToggle = document.getElementById('sideToggle');
+  const sideNav = document.getElementById('sideNav');
+
+  sideToggle?.addEventListener('click', () => {
+    sideNav.classList.toggle('is-open');
+  });
+
+  // Close drawer after clicking a link (mobile)
+  sideNav?.addEventListener('click', (e) => {
+    const a = e.target.closest('a');
+    if (a && sideNav.classList.contains('is-open')) {
+      sideNav.classList.remove('is-open');
+    }
+  });
+</script>
+
 
 </body>
 </html>

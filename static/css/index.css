@@ -756,4 +756,96 @@ a:focus {
   padding: 0.35rem 0.5rem;
 }
 
+/* ===== Side menu layout ===== */
+html {
+  scroll-behavior: smooth;
+}
+
+.page-shell {
+  /* Full-width shell; sidebar is fixed so we don't want a centered grid
+     that creates large gutters on wide screens. */
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Sidebar */
+.side-nav {
+  --side-nav-width: 260px;
+  --side-nav-gap: 24px;
+
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  width: var(--side-nav-width);
+  height: calc(100vh - 32px);
+  overflow: auto;
+
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 12px;
+  padding: 14px 12px;
+  background: white;
+  z-index: 900;
+}
+
+/* Make Bulma menu a bit tighter */
+.side-nav .menu-label {
+  margin-bottom: 8px;
+}
+.side-nav .menu-list a {
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+/* Main content area */
+.page-main {
+  /* Offset main content so it sits to the right of the fixed sidebar */
+  margin-left: calc(16px + 260px + 24px);
+  padding: 16px 16px 16px 0;
+  min-width: 0;
+}
+
+/* Mobile: sidebar becomes a drawer */
+.side-toggle {
+  display: none;
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  z-index: 1001;
+}
+
+@media (max-width: 1024px) {
+  .page-shell {
+    padding: 0;
+  }
+
+  .side-toggle {
+    display: inline-flex;
+  }
+
+  .side-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    height: auto;
+    width: 280px;
+    transform: translateX(-110%);
+    transition: transform 180ms ease;
+    z-index: 1000;
+    border-radius: 0;
+    /* Override desktop offsets */
+    margin: 0;
+  }
+
+  .side-nav.is-open {
+    transform: translateX(0);
+  }
+
+  .page-main {
+    margin-left: 0;
+    padding: 0 12px;
+  }
+}
+
 
