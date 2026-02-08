@@ -57,12 +57,12 @@
       <p class="menu-label">On this page</p>
       <ul class="menu-list">
         <li><a href="#motivation">Motivation</a></li>
-        <li><a href="#method">Method</a></li>
+        <li><a href="#method">Method: Continuation-Based Online Preference Pairing</a></li>
         <li><a href="#protocol">Protocol</a></li>
         <li><a href="#data-scaling">Data Scaling</a></li>
-        <li><a href="#ablations">Ablations</a></li>
+        <li><a href="#ablations">Recipe Ablations</a></li>
         <li><a href="#bon">Best-of-N</a></li>
-        <li><a href="#grpo">GRPO</a></li>
+        <li><a href="#grpo">Policy Optimization</a></li>
         <li><a href="#references">References</a></li>
         <li><a href="#BibTeX">BibTeX</a></li>
       </ul>
@@ -229,8 +229,8 @@
       <h3 class="title is-4 has-text-centered" id="motivation">Motivation</h3>
       <div class="content">
         <p>
-          Reinforcement learning from human feedback (RLHF) has been central to aligning modern language models, but it hinges on a critical component: the reward signal. High-quality preference data is expensive to collect and annotate. Moreover, even preference labels annotated by human or strong LLM judges can often be subjective and noisy, further amplifying reward hacking behaviors like deception or alignment faking.
-          The table below shows estimated candidate completion and annotation cost instantiated with a GPT-4–class model <code>gpt-4o</code> (Dataset statistics from <a href="#ref-1">[1]</a>).
+          Reinforcement learning from human feedback (RLHF) <a href="#ref-1">[1]</a> has been central to aligning modern language models, but it hinges on a critical component: the reward signal. High-quality preference data is expensive to collect and annotate <a href="#ref-2">[2]</a>, <a href="#ref-3">[3]</a>, <a href="#ref-4">[4]</a>. Moreover, even preference labels annotated by human or strong LLM judges can often be subjective and noisy <a href="#ref-1">[1]</a>, <a href="#ref-5">[5]</a>, <a href="#ref-6">[6]</a>, <a href="#ref-7">[7]</a>, <a href="#ref-8">[8]</a>, further amplifying reward hacking behaviors like deception or alignment faking.
+          The table below shows estimated candidate completion and annotation cost on two representative datasets UltraFeedback <a href="#ref-2">[2]</a> and UltraInteract <a href="#ref-3">[3]</a> instantiated with a GPT-4–class model <code>gpt-4o</code> (Dataset statistics from <a href="#ref-9">[9]</a>).
           <table class="table is-striped is-hoverable is-fullwidth">
             <!-- <caption style="caption-side: bottom; text-align: center; padding-top: 0.5rem; font-size: 0.90em;">
               Table 1. Estimated candidate completion and annotation cost instantiated with a GPT-4–class model <code>gpt-4o</code> (Dataset statistics from <a href="#ref-1">[1]</a>).
@@ -270,7 +270,7 @@
 
           This motivates a key question: 
           <strong>how much typical reward-model supervision can be learned in an unsupervised manner?</strong>
-          We propose  <strong>Reward-Based Scaling (RBS)</strong>: an unsupervised framework that converts web text into implicit preferences by treating natural continuations as "chosen samples" and mismatched continuations as in-batch negatives "rejected samples"—producing online preference data at essentially zero annotation cost.
+          We propose  <strong>Reward-Based Scaling (RBS)</strong>: an unsupervised framework that converts web text into implicit preferences by treating natural continuations as "chosen samples" and mismatched continuations as in-batch negatives "rejected samples"—producing online preference data at essentially <strong>zero annotation cost</strong>.
         </p>
       </div>
 
@@ -435,11 +435,10 @@
       <h3 class="title is-4 has-text-centered" id="data-scaling">Data Scaling</h3>
 
       <div class="content">
-        <ul>
-          In a controlled study on Llama-3.2-3B, training with our method on FineMath shows steady performance gains on all subsets of RewardBench v1 and v2 over the 11M-token budget, indicating that raw math web text can provide a useful preference-learning signal even without curated comparison data (left).
-          <br/>
-          Moreover, we find that the recipe transfers well across model families and scales. When compared within parameter-matched cohorts, all trained RMs rank strongly—top-10 on RewardBench v2 in their respective cohort—and show similarly consistent competitiveness on RewardBench v1, indicating robust cross-backbone transfer (right).
-        </ul>
+        <p>
+          <strong>In a controlled study on Llama-3.2-3B, training with our method on FineMath shows steady performance gains on all subsets of RewardBench v1 and v2 over the 11M-token budget,</strong> indicating that raw math web text can provide a useful preference-learning signal even without curated comparison data.
+          
+        </p>
       </div>
 
       <!-- Figure 2 -->
@@ -514,69 +513,85 @@
         }
       </style>
       
-      <div class="container is-max-desktop">
-      <div class="columns is-vcentered">
-        <!-- Plot (bigger, left-aligned) -->
-        <div class="column is-8" style="display: flex; align-items: flex-start;">
-          <figure class="image" style="margin-left: 0;">
-            <img
-              src="static/images/fig2_scaling.png"
-              alt="Scalability with respect to data size: RewardBench v1/v2 vs token budget"
-            />
+      <!-- Plot -->
+      <!-- <div style="margin-bottom: 2rem;">
+        <figure class="image">
+          <img
+            src="static/images/fig2_scaling.png"
+            alt="Scalability with respect to data size: RewardBench v1/v2 vs token budget"
+          />
+        </figure>
+      </div> -->
+      <div class="columns is-centered">
+        <div class="column is-9">
+          <figure class="image">
+            <img src="static/images/fig2_scaling.png" alt="Scalability with respect to data size: RewardBench v1/v2 vs token budget" />
           </figure>
         </div>
-      
-        <!-- Table (smaller) -->
-        <div class="column is-3">
-          <div style="max-width: 380px; margin: 0 auto;">
-            <table class="rb-booktabs">
-              <thead>
-                <tr>
-                  <th class="left" rowspan="2">Backbone</th>
-                  <th class="group" colspan="2">RB v1</th>
-                  <th class="group" colspan="2">RB v2</th>
-                </tr>
-                <tr>
-                  <th class="num">Score</th>
-                  <th class="num">Rank</th>
-                  <th class="num">Score</th>
-                  <th class="num">Rank</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="left">Llama-3.1-1B</td>
-                  <td class="num">60.0</td>
-                  <td class="num">3</td>
-                  <td class="num">33.2</td>
-                  <td class="num">3</td>
-                </tr>
-                <tr>
-                  <td class="left">Llama-3.1-3B</td>
-                  <td class="num">65.6</td>
-                  <td class="num">4</td>
-                  <td class="num">36.2</td>
-                  <td class="num">9</td>
-                </tr>
-                <tr>
-                  <td class="left">Qwen2.5-3B-Inst.</td>
-                  <td class="num">70.0</td>
-                  <td class="num">3</td>
-                  <td class="num">46.2</td>
-                  <td class="num">8</td>
-                </tr>
-                <tr>
-                  <td class="left">Qwen2.5-7B-Inst.</td>
-                  <td class="num">73.8</td>
-                  <td class="num">18</td>
-                  <td class="num">57.0</td>
-                  <td class="num">5</td>
-                </tr>
-              </tbody>
-            </table>
+      </div>
+      <div class="columns is-vcentered is-variable is-6" style="align-items: stretch;">
+        <!-- Text -->
+        <div class="column is-5" style="display:flex;">
+          <div style="width:100%; display:flex; flex-direction:column; justify-content:center;">
+            <div class="content">
+              <p>
+                <strong>Moreover, we find that the recipe transfers well across model families and scales. </strong>When compared within parameter-matched cohorts, all trained RMs rank strongly—top-10 on RewardBench v2 in their respective cohort—and show similarly consistent competitiveness on RewardBench v1, indicating robust cross-backbone transfer.
+              </p>
+            </div>
           </div>
         </div>
-      </div>
+        <!-- Table -->
+        <div class="column is-7 is-offset-1" style="display:flex;">
+          <div style="display: flex; justify-content: center;">
+            <div style="max-width: 320px;">
+              <table class="rb-booktabs">
+                <thead>
+                  <tr>
+                    <th class="left" rowspan="2">Backbone</th>
+                    <th class="group" colspan="2">RB v1</th>
+                    <th class="group" colspan="2">RB v2</th>
+                  </tr>
+                  <tr>
+                    <th class="num">Score</th>
+                    <th class="num">Rank</th>
+                    <th class="num">Score</th>
+                    <th class="num">Rank</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="left">Llama-3.1-1B</td>
+                    <td class="num">60.0</td>
+                    <td class="num">3</td>
+                    <td class="num">33.2</td>
+                    <td class="num">3</td>
+                  </tr>
+                  <tr>
+                    <td class="left">Llama-3.1-3B</td>
+                    <td class="num">65.6</td>
+                    <td class="num">4</td>
+                    <td class="num">36.2</td>
+                    <td class="num">9</td>
+                  </tr>
+                  <tr>
+                    <td class="left">Qwen2.5-3B-Inst.</td>
+                    <td class="num">70.0</td>
+                    <td class="num">3</td>
+                    <td class="num">46.2</td>
+                    <td class="num">8</td>
+                  </tr>
+                  <tr>
+                    <td class="left">Qwen2.5-7B-Inst.</td>
+                    <td class="num">73.8</td>
+                    <td class="num">18</td>
+                    <td class="num">57.0</td>
+                    <td class="num">5</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </div>
       
       
@@ -736,7 +751,7 @@
   <!-- Left: Table panel -->
   <div class="column is-4" style="display:flex;">
     <div style="width:100%; display:flex; flex-direction:column; justify-content:center;">
-      <table class="table is-narrow is-fullwidth">
+      <table class="table is-narrow is-fullwidth paperlike-table">
         <thead>
           <tr>
             <th>Splitting</th>
@@ -796,7 +811,7 @@
 <div class="columns is-vcentered is-variable is-6" style="align-items: stretch;">
 
   <!-- Left: Table -->
-  <div class="column is-3.1" style="display:flex;">
+  <div class="column is-4" style="display:flex;">
     <div style="width:100%; display:flex; flex-direction:column; justify-content:center;">
       <table class="table is-narrow is-fullwidth paperlike-table">
         <thead>
@@ -836,8 +851,8 @@
   </div>
 
   <!-- Right: Curves -->
-  <div class="column is-8" style="display:flex;">
-    <div style="width:100%; display:flex; flex-direction:column; justify-content:center; margin-left:auto;">
+  <div class="column is-7 is-offset-1" style="display: flex; justify-content: flex-end;">
+    <div style="display:flex; justify-content:flex-end; width:100%; min-width:0;">
       <figure class="image" style="margin:0;">
         <img src="static/images/fig6_centering.png"
              alt="RewardBench v2 learning curves across 11M token budget vs. centering loss"
@@ -1009,6 +1024,62 @@
       <h2 class="title">References</h2>
       <ol>
         <li id="ref-1">
+          <span>
+            Christiano, P. F., Leike, J., Brown, T., Martic, M., Legg, S., &amp; Amodei, D.
+            (2017). <em>Deep reinforcement learning from human preferences</em>. Advances in Neural Information Processing Systems, 30.
+            <a href="https://proceedings.neurips.cc/paper/2017/hash/d5e2c0adad503c91f91df240d0cd4e49-Abstract.html" target="_blank" rel="noopener noreferrer">https://proceedings.neurips.cc/paper/2017/hash/d5e2c0adad503c91f91df240d0cd4e49-Abstract.html</a>
+          </span>
+        </li>
+        <li id="ref-2">
+          <span>
+            Cui, G., Yuan, L., Ding, N., Yao, G., He, B., Zhu, W., Ni, Y., Xie, G., Xie, R., Lin, Y., Liu, Z., &amp; Sun, M.
+            (2024). <em>UltraFeedback: Boosting Language Models with Scaled AI Feedback</em>. arXiv:2310.01377.
+            <a href="https://arxiv.org/abs/2310.01377" target="_blank" rel="noopener noreferrer">https://arxiv.org/abs/2310.01377</a>
+          </span>
+        </li>
+        <li id="ref-3">
+          <span>
+            Yuan, L., Cui, G., Wang, H., Ding, N., Wang, X., Deng, J., Shan, B., Chen, H., Xie, R., Lin, Y., Liu, Z., Zhou, B., Peng, H., Liu, Z., &amp; Sun, M.
+            (2024). <em>Advancing LLM Reasoning Generalists with Preference Trees</em>. arXiv:2404.02078.
+            <a href="https://arxiv.org/abs/2404.02078" target="_blank" rel="noopener noreferrer">https://arxiv.org/abs/2404.02078</a>
+          </span>
+        </li>
+        <li id="ref-4">
+          <span>
+            Bai, Y., Jones, A., Ndousse, K., Askell, A., Chen, A., DasSarma, N., Drain, D., Fort, S., Ganguli, D., Henighan, T., &amp; others.
+            (2022). <em>Training a helpful and harmless assistant with reinforcement learning from human feedback</em>. arXiv:2204.05862.
+            <a href="https://arxiv.org/abs/2204.05862" target="_blank" rel="noopener noreferrer">https://arxiv.org/abs/2204.05862</a>
+          </span>
+        </li>
+        <li id="ref-5">
+          <span>
+            Ouyang, L., Wu, J., Jiang, X., Almeida, D., Wainwright, C., Mishkin, P., Zhang, C., Agarwal, S., Slama, K., &amp; others.
+            (2022). <em>Training language models to follow instructions with human feedback</em>. Advances in Neural Information Processing Systems, 35.
+            <a href="https://proceedings.neurips.cc/paper/2022/hash/b1efde53be364a73914f58805a001731-Abstract-Conference.html" target="_blank" rel="noopener noreferrer">https://proceedings.neurips.cc/paper/2022/hash/b1efde53be364a73914f58805a001731-Abstract-Conference.html</a>
+          </span>
+        </li>
+        <li id="ref-6">
+          <span>
+            Casper, S., Davies, X., Shi, C., Gilbert, T. K., Scheurer, J., Rando, J., Freedman, R., Korbak, T., Lindner, D., Freire, P., &amp; others.
+            (2023). <em>Open problems and fundamental limitations of reinforcement learning from human feedback</em>. arXiv:2307.15217.
+            <a href="https://arxiv.org/abs/2307.15217" target="_blank" rel="noopener noreferrer">https://arxiv.org/abs/2307.15217</a>
+          </span>
+        </li>
+        <li id="ref-7">
+          <span>
+            Zhang, M. J. Q., Wang, Z., Hwang, J. D., Dong, Y., Delalleau, O., Choi, Y., Choi, E., Ren, X., &amp; Pyatkin, V.
+            (2024). <em>Diverging Preferences: When do Annotators Disagree and do Models Know?</em> arXiv:2410.14632.
+            <a href="https://arxiv.org/abs/2410.14632" target="_blank" rel="noopener noreferrer">https://arxiv.org/abs/2410.14632</a>
+          </span>
+        </li>
+        <li id="ref-8">
+          <span>
+            Gao, Y., Alon, D., &amp; Metzler, D.
+            (2024). <em>Impact of preference noise on the alignment performance of generative language models</em>. arXiv:2404.09824.
+            <a href="https://arxiv.org/abs/2404.09824" target="_blank" rel="noopener noreferrer">https://arxiv.org/abs/2404.09824</a>
+          </span>
+        </li>
+        <li id="ref-9">
           <span>
             Dong, H., Xiong, W., Pang, B., Wang, H., Zhao, H., Zhou, Y., Jiang, N., Sahoo, D., Xiong, C., &amp; Zhang, T.
             (2024). <em>RLHF Workflow: From Reward Modeling to Online RLHF</em>. arXiv:2405.07863.
