@@ -38,6 +38,24 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Top back-to-homepage link */
+.top-back-nav {
+  margin: 12px 0;
+}
+
+.top-back-link {
+  display: inline-block;
+  color: var(--primary-color);
+  font-weight: 600;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.top-back-link:hover {
+  color: var(--primary-hover);
+  text-decoration: underline;
+}
+
 
 /* Modern Button Styles */
 .button {
