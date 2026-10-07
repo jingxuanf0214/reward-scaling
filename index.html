@@ -4,16 +4,16 @@
   <meta charset="utf-8" />
 
   <!-- Meta tags for social media banners -->
-  <meta name="description" content="Next-token preference (NTP) learns reward models from raw web text without preference labels. 11M tokens improve RewardBench 2, downstream selection, and supervised label efficiency." />
+  <meta name="description" content="Next-token preference (NTP) learns reward models from raw web text without preference labels. 11M tokens improve RewardBench 2, downstream selection, and supervised reward training." />
   <meta property="og:title" content="Next-token Preference: Scaling Unsupervised Reward Modeling" />
-  <meta property="og:description" content="Next-token preference (NTP) learns reward models from raw web text without preference labels. 11M tokens improve RewardBench 2, downstream selection, and supervised label efficiency." />
+  <meta property="og:description" content="Next-token preference (NTP) learns reward models from raw web text without preference labels. 11M tokens improve RewardBench 2, downstream selection, and supervised reward training." />
   <meta property="og:url" content="https://jingxuanf0214.github.io/reward-scaling/" />
   <meta property="og:image" content="https://jingxuanf0214.github.io/reward-scaling/static/images/fig1_workflow.png" />
   <meta property="og:image:width" content="2400" />
   <meta property="og:image:height" content="1246" />
 
   <meta name="twitter:title" content="Next-token Preference: Scaling Unsupervised Reward Modeling" />
-  <meta name="twitter:description" content="Next-token preference (NTP) learns reward models from raw web text without preference labels. 11M tokens improve RewardBench 2, downstream selection, and supervised label efficiency." />
+  <meta name="twitter:description" content="Next-token preference (NTP) learns reward models from raw web text without preference labels. 11M tokens improve RewardBench 2, downstream selection, and supervised reward training." />
   <meta name="twitter:image" content="https://jingxuanf0214.github.io/reward-scaling/static/images/fig1_workflow.png" />
   <meta name="twitter:card" content="summary_large_image" />
 
@@ -65,7 +65,7 @@
         <li><a href="#corpora">Web Corpora</a></li>
         <li><a href="#bon">Best-of-N</a></li>
         <li><a href="#grpo">Policy Optimization</a></li>
-        <li><a href="#mid-training">Supervised Training and Label Efficiency</a></li>
+        <li><a href="#mid-training">Supervised Training</a></li>
         <li><a href="#references">References</a></li>
         <li><a href="#BibTeX">BibTeX</a></li>
       </ul>
@@ -197,7 +197,7 @@
         <ul>
           <li><strong>Transferable rewards:</strong> 11M tokens per corpus yield peak overall RewardBench 2 gains of 7.6–8.3 percentage points across mathematical and general-domain web text.</li>
           <li><strong>Downstream utility:</strong> the learned rewards improve response selection in math, code, safety, and instruction following, and support math policy optimization.</li>
-          <li><strong>Label efficiency:</strong> NTP initialization with half of the labeled RLHFMix1 data surpasses base initialization trained on the full dataset.</li>
+          <li><strong>Supervised training:</strong> NTP provides a useful initialization for reward learning from curated preference data.</li>
         </ul>
       </div>
 
@@ -219,7 +219,7 @@
         <a href="static/images/fig1_workflow.png" target="_blank" rel="noopener noreferrer" aria-label="Open full-size figure: NTP workflow: web text is split into prefixes and suffixes, with same-sequence pairs chosen and cross-sequence pairs rejected">
           <img src="static/images/fig1_workflow.png?v=20261005" alt="NTP workflow: web text is split into prefixes and suffixes, with same-sequence pairs chosen and cross-sequence pairs rejected" width="2400" height="1246" loading="lazy" decoding="async" />
         </a>
-        <figcaption><a href="static/pdfs/next-token-preference.pdf#page=2" target="_blank" rel="noopener noreferrer">Paper Figure 1</a>. All-to-all scoring constructs a preference-learning signal directly from web text. Select the figure to view it at full size.</figcaption>
+        <figcaption>All-to-all scoring constructs a preference-learning signal directly from web text. Select the figure to view it at full size.</figcaption>
       </figure>
         <div class="content">
           <p>For a scalar reward \(s_\theta(x,y)\), the Bradley–Terry objective ranks each original continuation above the in-batch alternatives:</p>
@@ -253,7 +253,7 @@
             <li><strong>OOD Safety:</strong> the Safety subset of each benchmark.</li>
             <li><strong>OOD Others:</strong> the remaining subsets, including conversational quality in RewardBench and factuality, ties, focus, and precise instruction following in RewardBench 2.</li>
           </ul>
-          <p><strong>Downstream evaluation.</strong> Best-of-<em>N</em> selection tests math, code, safety, and instruction following with 1B, 3B, and 8B actors. GRPO tests the reward signal for math policy training. Finally, curated-preference training tests NTP as an initialization for more label-efficient supervised reward learning.</p>
+          <p><strong>Downstream evaluation.</strong> Best-of-<em>N</em> selection tests math, code, safety, and instruction following with 1B, 3B, and 8B actors. GRPO tests the reward signal for math policy training. Finally, curated-preference training tests NTP as an initialization for supervised reward learning.</p>
         </div>
       </section>
 
@@ -266,15 +266,15 @@
         <a href="static/images/fig2_scaling.png" target="_blank" rel="noopener noreferrer" aria-label="Open full-size figure: RewardBench and RewardBench 2 learning curves across the 11M-token FineMath budget">
           <img src="static/images/fig2_scaling.png?v=20261005" alt="RewardBench and RewardBench 2 learning curves across the 11M-token FineMath budget" width="3087" height="928" loading="lazy" decoding="async" />
         </a>
-        <figcaption><a href="static/pdfs/next-token-preference.pdf#page=5" target="_blank" rel="noopener noreferrer">Paper Figure 2</a>. Continuation-based reward learning transfers to in-domain reasoning and out-of-domain preference judgments. Select the figure to view it at full size.</figcaption>
+        <figcaption>Continuation-based reward learning transfers to in-domain reasoning and out-of-domain preference judgments. Select the figure to view it at full size.</figcaption>
       </figure>
         <div class="research-pair research-pair-text">
           <div class="content">
-            <p><strong>The recipe transfers across model families and sizes.</strong> All four trained models rank in the top 10 on RewardBench 2 within the paper’s parameter-matched cohorts (0.5–1.5B, 3–4B, and 7B).</p>
+            <p><strong>The recipe transfers across model families and sizes.</strong> All four trained models rank in the top 10 on RewardBench 2 within parameter-matched cohorts (0.5–1.5B, 3–4B, and 7B).</p>
           </div>
           <div class="table-container research-table-wrap" role="region" aria-labelledby="backbone-caption" tabindex="0">
             <table class="table is-fullwidth research-table">
-              <caption id="backbone-caption"><a href="static/pdfs/next-token-preference.pdf#page=6" target="_blank" rel="noopener noreferrer">Paper Table 2</a>. Scores (%) and leaderboard ranks as reported in the paper; ranks are within parameter-matched cohorts.</caption>
+              <caption id="backbone-caption">Scores (%) and recorded leaderboard ranks within parameter-matched cohorts.</caption>
               <thead>
                 <tr><th scope="col" rowspan="2">Backbone</th><th scope="colgroup" colspan="2">RewardBench</th><th scope="colgroup" colspan="2">RewardBench 2</th></tr>
                 <tr><th scope="col">Score</th><th scope="col">Rank</th><th scope="col">Score</th><th scope="col">Rank</th></tr>
@@ -298,7 +298,7 @@
           </div>
           <div class="table-container research-table-wrap" role="region" aria-labelledby="curated-caption" tabindex="0">
             <table class="table is-fullwidth research-table research-table-descriptive">
-              <caption id="curated-caption"><a href="static/pdfs/next-token-preference.pdf#page=5" target="_blank" rel="noopener noreferrer">Paper Table 1</a>. Overall gains over Llama-3.2-3B initialization. The first three rows share a token budget; the final two use the full labeled datasets.</caption>
+              <caption id="curated-caption">Overall gains over Llama-3.2-3B initialization. The first three rows share a token budget; the final two use the full labeled datasets.</caption>
               <thead><tr><th scope="col">Training data / method</th><th scope="col">Budget</th><th scope="col">RewardBench 2 gain (pp)</th></tr></thead>
               <tbody>
                 <tr><th scope="row"><strong>FineMath NTP</strong></th><td>11M tokens</td><td><strong>+7.7</strong></td></tr>
@@ -321,7 +321,7 @@
         <div class="research-pair research-pair-plot">
           <div class="table-container research-table-wrap" role="region" aria-labelledby="batch-caption" tabindex="0">
             <table class="table is-fullwidth research-table research-table-compact">
-              <caption id="batch-caption"><a href="static/pdfs/next-token-preference.pdf#page=6" target="_blank" rel="noopener noreferrer">Paper Figure 3a</a>. Peak RewardBench 2 gains over initialization, in percentage points. Subset peaks need not occur at the same checkpoint.</caption>
+              <caption id="batch-caption">Peak RewardBench 2 gains over initialization, in percentage points. Subset peaks need not occur at the same checkpoint.</caption>
               <thead><tr><th scope="col">Batch size</th><th scope="col">ID</th><th scope="col">OOD Safety</th><th scope="col">OOD Others</th><th scope="col">Overall</th></tr></thead>
               <tbody>
                 <tr><th scope="row">8</th><td>+9.6</td><td>+3.4</td><td>+0.6</td><td>+1.0</td></tr>
@@ -334,7 +334,7 @@
             <a href="static/images/fig3_batchsize.png" target="_blank" rel="noopener noreferrer" aria-label="Open full-size figure: RewardBench 2 learning curves for batch sizes 8, 16, and 32">
               <img src="static/images/fig3_batchsize.png?v=20261005" alt="RewardBench 2 learning curves for batch sizes 8, 16, and 32" width="2235" height="619" loading="lazy" decoding="async" />
             </a>
-            <figcaption><a href="static/pdfs/next-token-preference.pdf#page=6" target="_blank" rel="noopener noreferrer">Paper Figure 3b</a>. Larger batches improve the training trajectory across the 11M-token budget. Select the figure to view it at full size.</figcaption>
+            <figcaption>Larger batches improve the training trajectory across the 11M-token budget. Select the figure to view it at full size.</figcaption>
           </figure>
         </div>
         <div class="content">
@@ -344,7 +344,7 @@
         <div class="research-pair research-pair-plot">
           <div class="table-container research-table-wrap" role="region" aria-labelledby="splitting-caption" tabindex="0">
             <table class="table is-fullwidth research-table research-table-compact">
-              <caption id="splitting-caption"><a href="static/pdfs/next-token-preference.pdf#page=6" target="_blank" rel="noopener noreferrer">Paper Figure 4a</a>. Peak RewardBench 2 gains over initialization, in percentage points.</caption>
+              <caption id="splitting-caption">Peak RewardBench 2 gains over initialization, in percentage points.</caption>
               <thead><tr><th scope="col">Splitting format</th><th scope="col">ID</th><th scope="col">OOD Safety</th><th scope="col">OOD Others</th><th scope="col">Overall</th></tr></thead>
               <tbody>
                 <tr><th scope="row">Preserve sentence</th><td>+4.6</td><td>+1.7</td><td>+3.5</td><td>+0.8</td></tr>
@@ -356,7 +356,7 @@
             <a href="static/images/fig5_splitting.png" target="_blank" rel="noopener noreferrer" aria-label="Open full-size figure: RewardBench 2 learning curves comparing sentence-preserving and sentence-breaking splits">
               <img src="static/images/fig5_splitting.png?v=20261005" alt="RewardBench 2 learning curves comparing sentence-preserving and sentence-breaking splits" width="2235" height="619" loading="lazy" decoding="async" />
             </a>
-            <figcaption><a href="static/pdfs/next-token-preference.pdf#page=6" target="_blank" rel="noopener noreferrer">Paper Figure 4b</a>. Breaking sentences retains more contextually confusable in-batch negatives. Select the figure to view it at full size.</figcaption>
+            <figcaption>Breaking sentences retains more contextually confusable in-batch negatives. Select the figure to view it at full size.</figcaption>
           </figure>
         </div>
         <div class="content">
@@ -366,7 +366,7 @@
         <div class="research-pair research-pair-plot">
           <div class="table-container research-table-wrap" role="region" aria-labelledby="centering-caption" tabindex="0">
             <table class="table is-fullwidth research-table research-table-compact">
-              <caption id="centering-caption"><a href="static/pdfs/next-token-preference.pdf#page=7" target="_blank" rel="noopener noreferrer">Paper Figure 5a</a>. Peak RewardBench 2 subset/overall gains and GSM8K BoN ΔMAP, in percentage points.</caption>
+              <caption id="centering-caption">Peak RewardBench 2 subset/overall gains and GSM8K BoN ΔMAP, in percentage points.</caption>
               <thead><tr><th scope="col">Centering</th><th scope="col">ID</th><th scope="col">OOD Safety</th><th scope="col">OOD Others</th><th scope="col">Overall</th><th scope="col">BoN ΔMAP</th></tr></thead>
               <tbody>
                 <tr><th scope="row">Without</th><td>+16.9</td><td>+5.9</td><td>+8.6</td><td>+6.4</td><td>+2.8</td></tr>
@@ -378,7 +378,7 @@
             <a href="static/images/fig6_centering.png" target="_blank" rel="noopener noreferrer" aria-label="Open full-size figure: RewardBench 2 learning curves with and without score centering">
               <img src="static/images/fig6_centering.png?v=20261005" alt="RewardBench 2 learning curves with and without score centering" width="2235" height="619" loading="lazy" decoding="async" />
             </a>
-            <figcaption><a href="static/pdfs/next-token-preference.pdf#page=7" target="_blank" rel="noopener noreferrer">Paper Figure 5b</a>. Score centering improves overall preference-alignment performance. Select the figure to view it at full size.</figcaption>
+            <figcaption>Score centering improves overall preference-alignment performance. Select the figure to view it at full size.</figcaption>
           </figure>
         </div>
       </section>
@@ -394,7 +394,7 @@
           </div>
           <div class="table-container research-table-wrap" role="region" aria-labelledby="cpt-caption" tabindex="0">
             <table class="table is-fullwidth research-table">
-              <caption id="cpt-caption"><a href="static/pdfs/next-token-preference.pdf#page=8" target="_blank" rel="noopener noreferrer">Paper Table 3</a>. Absolute RewardBench 2 scores (%). CPT and NTP each use 11M FineMath tokens. A dash indicates an unreported configuration.</caption>
+              <caption id="cpt-caption">Absolute RewardBench 2 scores (%). CPT and NTP each use 11M FineMath tokens. A dash indicates an unreported configuration.</caption>
               <thead><tr><th scope="col">Readout</th><th scope="col">Untrained backbone</th><th scope="col">CPT backbone</th><th scope="col">NTP backbone</th></tr></thead>
               <tbody>
                 <tr><th scope="row">Frozen-backbone probe</th><td>30.0</td><td>28.9</td><td><strong>36.4</strong></td></tr>
@@ -414,7 +414,7 @@
           </div>
           <div class="table-container research-table-wrap" role="region" aria-labelledby="corpora-caption" tabindex="0">
             <table class="table is-fullwidth research-table research-table-descriptive">
-              <caption id="corpora-caption"><a href="static/pdfs/next-token-preference.pdf#page=8" target="_blank" rel="noopener noreferrer">Paper Table 4</a>. Peak overall RewardBench 2 gains over the shared initialization, with 11M tokens per corpus.</caption>
+              <caption id="corpora-caption">Peak overall RewardBench 2 gains over the shared initialization, with 11M tokens per corpus.</caption>
               <thead><tr><th scope="col">Training corpus</th><th scope="col">Domain</th><th scope="col">RewardBench 2 gain (pp)</th></tr></thead>
               <tbody>
                 <tr><th scope="row">FineMath-4plus</th><td>Mathematical web text</td><td>+7.7</td></tr>
@@ -438,7 +438,7 @@
             <a href="static/images/fig8_bon_scaling.png" target="_blank" rel="noopener noreferrer" aria-label="Open full-size figure: Best-of-N results for three actor sizes across GSM8K, MATH500, HumanEval+, ToxiGen, and IFEval, including Skywork and Beaver baselines">
               <img src="static/images/fig8_bon_scaling.png?v=20261005" alt="Best-of-N results for three actor sizes across GSM8K, MATH500, HumanEval+, ToxiGen, and IFEval, including Skywork and Beaver baselines" width="4824" height="7282" loading="lazy" decoding="async" />
             </a>
-            <figcaption><a href="static/pdfs/next-token-preference.pdf#page=9" target="_blank" rel="noopener noreferrer">Paper Figure 7</a>. Five tasks across three actors; each column uses a different actor size. Metrics follow each task, including pass@1 with base and extra tests for HumanEval+ and prompt-level strict accuracy for IFEval. Select the figure to view it at full size.</figcaption>
+            <figcaption>Five tasks across three actors; each column uses a different actor size. Metrics follow each task, including pass@1 with base and extra tests for HumanEval+ and prompt-level strict accuracy for IFEval. Select the figure to view it at full size.</figcaption>
           </figure>
         </div>
       </section>
@@ -452,7 +452,7 @@
           </div>
           <div class="table-container research-table-wrap" role="region" aria-labelledby="grpo-caption" tabindex="0">
             <table class="table is-fullwidth research-table">
-              <caption id="grpo-caption"><a href="static/pdfs/next-token-preference.pdf#page=10" target="_blank" rel="noopener noreferrer">Paper Table 5</a>. Peak mean@1 accuracy (0–1). Actors: Llama-3.2-3B-Instruct and Llama-3.1-8B-Instruct. Bold and underlined values mark the best and second-best results.</caption>
+              <caption id="grpo-caption">Peak mean@1 accuracy (0–1). Actors: Llama-3.2-3B-Instruct and Llama-3.1-8B-Instruct. Bold and underlined values mark the best and second-best results.</caption>
               <thead>
                 <tr><th scope="col" rowspan="2">Reward model</th><th scope="colgroup" colspan="2">3B actor</th><th scope="colgroup" colspan="2">8B actor</th></tr>
                 <tr><th scope="col">MATH</th><th scope="col">GSM8K</th><th scope="col">MATH</th><th scope="col">GSM8K</th></tr>
@@ -479,7 +479,7 @@
         <div class="research-pair research-pair-plot">
           <div class="table-container research-table-wrap" role="region" aria-labelledby="midtraining-caption" tabindex="0">
             <table class="table is-fullwidth research-table research-table-compact">
-              <caption id="midtraining-caption"><a href="static/pdfs/next-token-preference.pdf#page=10" target="_blank" rel="noopener noreferrer">Paper Table 6</a>. RewardBench 2 gains (percentage points) reported at the end of RLHFMix1 training for the three initializations.</caption>
+              <caption id="midtraining-caption">RewardBench 2 gains (percentage points) reported at the end of RLHFMix1 training for the three initializations.</caption>
               <thead><tr><th scope="col">Llama-3.2-3B initialization</th><th scope="col">ID Math</th><th scope="col">OOD Safety</th><th scope="col">OOD Others</th><th scope="col">Overall</th></tr></thead>
               <tbody>
                 <tr><th scope="row">Base</th><td>+14.5</td><td>+22.3</td><td>+1.6</td><td>+8.3</td></tr>
@@ -492,29 +492,8 @@
             <a href="static/images/midtraining_rlhfmix1.png" target="_blank" rel="noopener noreferrer" aria-label="Open full-size figure: RewardBench 2 learning curves during supervised RLHFMix1 training from base, instruction-tuned, and NTP initializations">
               <img src="static/images/midtraining_rlhfmix1.png?v=20261005" alt="RewardBench 2 learning curves during supervised RLHFMix1 training from base, instruction-tuned, and NTP initializations" width="1906" height="1144" loading="lazy" decoding="async" />
             </a>
-            <figcaption><a href="static/pdfs/next-token-preference.pdf#page=36" target="_blank" rel="noopener noreferrer">Paper Figure 12</a>. Training trajectories over one epoch of curated preference learning. Select the figure to view it at full size.</figcaption>
+            <figcaption>Training trajectories over one epoch of curated preference learning. Select the figure to view it at full size.</figcaption>
           </figure>
-        </div>
-        <h3 class="title is-5">Half the labels, stronger than full-data base initialization</h3>
-        <div class="research-pair research-pair-text">
-          <div class="content">
-            <p>In a separate labeled-data budget sweep, NTP initialization outperforms base initialization at every tested fraction. With <strong>50% of RLHFMix1 (approximately 122K pairs)</strong>, it reaches an overall RewardBench 2 score of approximately <strong>44</strong>, matching its own full-data result and exceeding base initialization’s approximately <strong>32</strong> with all 244K pairs.</p>
-            <p>The benefit is not uniformly increasing with more labels: NTP’s score dips at the 5–10% budgets before recovering. Its advantage over base initialization nevertheless persists throughout the sweep.</p>
-          </div>
-          <div class="table-container research-table-wrap" role="region" aria-labelledby="label-efficiency-caption" tabindex="0">
-            <table class="table is-fullwidth research-table">
-              <caption id="label-efficiency-caption"><a href="static/pdfs/next-token-preference.pdf#page=37" target="_blank" rel="noopener noreferrer">Paper Table 23 (Appendix J.1)</a>. Approximate absolute RewardBench 2 scores (%) and pair counts. The full dataset contains 244,216 pairs; NTP initialization first uses 11M unlabeled FineMath tokens.</caption>
-              <thead><tr><th scope="col">Labeled fraction</th><th scope="col">Preference pairs</th><th scope="col">Base initialization</th><th scope="col">NTP initialization</th></tr></thead>
-              <tbody>
-                <tr><th scope="row">1%</th><td>≈2.4K</td><td>≈23</td><td>≈32</td></tr>
-                <tr><th scope="row">5%</th><td>≈12K</td><td>≈23</td><td>≈29</td></tr>
-                <tr><th scope="row">10%</th><td>≈24K</td><td>≈24</td><td>≈29</td></tr>
-                <tr><th scope="row">25%</th><td>≈61K</td><td>≈31</td><td>≈33</td></tr>
-                <tr><th scope="row"><strong>50%</strong></th><td><strong>≈122K</strong></td><td>≈32</td><td><strong>≈44</strong></td></tr>
-                <tr><th scope="row">100%</th><td>≈244K</td><td>≈32</td><td>≈44</td></tr>
-              </tbody>
-            </table>
-          </div>
         </div>
       </section>
 
