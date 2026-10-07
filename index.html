@@ -4,37 +4,36 @@
   <meta charset="utf-8" />
 
   <!-- Meta tags for social media banners -->
-  <meta name="description" content="Scaling Reward Modeling without Human Supervision: a pilot study on training reward models from raw web text using continuation-based preference pairing (no human labels). Improves RewardBench v1/v2 and transfers across backbones." />
-  <meta property="og:title" content="Scaling Reward Modeling without Human Supervision" />
-  <meta property="og:description" content="Unsupervised reward-based scaling (RBS): preference learning over document prefixes/suffixes from web corpora. Gains on RewardBench v1/v2; improves BoN selection and GRPO policy optimization." />
+  <meta name="description" content="Next-token preference (NTP) learns reward models from raw web text without preference labels. 11M tokens improve RewardBench 2, downstream selection, and supervised label efficiency." />
+  <meta property="og:title" content="Next-token Preference: Scaling Unsupervised Reward Modeling" />
+  <meta property="og:description" content="Next-token preference (NTP) learns reward models from raw web text without preference labels. 11M tokens improve RewardBench 2, downstream selection, and supervised label efficiency." />
   <meta property="og:url" content="https://jingxuanf0214.github.io/reward-scaling/" />
-  <meta property="og:image" content="static/images/rbs_og.png" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
+  <meta property="og:image" content="https://jingxuanf0214.github.io/reward-scaling/static/images/fig1_workflow.png" />
+  <meta property="og:image:width" content="2400" />
+  <meta property="og:image:height" content="1246" />
 
-  <meta name="twitter:title" content="Scaling Reward Modeling without Human Supervision" />
-  <meta name="twitter:description" content="Reward models from raw web text, no human labels: continuation-based preference pairing + BT loss + centering. Improves RewardBench v1/v2; helps BoN and GRPO." />
-  <meta name="twitter:image" content="static/images/rbs_twitter.png" />
+  <meta name="twitter:title" content="Next-token Preference: Scaling Unsupervised Reward Modeling" />
+  <meta name="twitter:description" content="Next-token preference (NTP) learns reward models from raw web text without preference labels. 11M tokens improve RewardBench 2, downstream selection, and supervised label efficiency." />
+  <meta name="twitter:image" content="https://jingxuanf0214.github.io/reward-scaling/static/images/fig1_workflow.png" />
   <meta name="twitter:card" content="summary_large_image" />
 
-  <meta name="keywords" content="reward modeling, RLHF, preference learning, unsupervised learning, rewardbench, best-of-n, policy optimization, GRPO, math reasoning, safety, web data, Bradley-Terry" />
+  <meta name="keywords" content="next-token preference, NTP, reward modeling, RLHF, preference learning, unsupervised learning, rewardbench, best-of-n, policy optimization, GRPO, math reasoning, safety, web data, Bradley-Terry" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <title>Scaling Reward Modeling without Human Supervision</title>
+  <title>Next-token Preference: Scaling Unsupervised Reward Modeling</title>
 
   <link rel="icon" type="image/x-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQYV2NkYGD4DwABBAEAja6zVwAAAABJRU5ErkJggg==" />
   <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet" />
 
   <link rel="stylesheet" href="static/css/bulma.min.css" />
   <link rel="stylesheet" href="static/css/bulma-carousel.min.css" />
-  <link rel="stylesheet" href="static/css/fontawesome.all.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" />
-  <link rel="stylesheet" href="static/css/index.css?v=20260206_3" />
+  <link rel="stylesheet" href="static/css/index.css?v=20261006b" />
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script defer src="static/js/fontawesome.all.min.js"></script>
   <script src="static/js/bulma-carousel.min.js"></script>
-  <script src="static/js/index.js"></script>
+  <script src="static/js/index.js?v=20261005"></script>
   <script>
     window.MathJax = {
       tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] }
@@ -46,7 +45,7 @@
 
 <body>
 <!-- Mobile menu toggle (shows on small screens) -->
-<button class="side-toggle button is-dark is-small" id="sideToggle" aria-label="Toggle menu">
+<button class="side-toggle button is-dark is-small" id="sideToggle" aria-label="Toggle menu" aria-controls="sideNav" aria-expanded="false">
   ☰ Menu
 </button>
 
@@ -57,12 +56,16 @@
       <p class="menu-label">On this page</p>
       <ul class="menu-list">
         <li><a href="#motivation">Motivation</a></li>
-        <li><a href="#method">Method: Continuation-Based Online Preference Pairing</a></li>
+        <li><a href="#method">Method: Next-token Preference</a></li>
         <li><a href="#protocol">Protocol</a></li>
-        <li><a href="#data-scaling">Data Scaling</a></li>
+        <li><a href="#data-scaling">Data Scaling and Transfer</a></li>
+        <li><a href="#curated-comparison">Curated-Data Comparison</a></li>
         <li><a href="#ablations">Recipe Ablations</a></li>
+        <li><a href="#cpt-control">Continued-Pretraining Control</a></li>
+        <li><a href="#corpora">Web Corpora</a></li>
         <li><a href="#bon">Best-of-N</a></li>
         <li><a href="#grpo">Policy Optimization</a></li>
+        <li><a href="#mid-training">Supervised Training and Label Efficiency</a></li>
         <li><a href="#references">References</a></li>
         <li><a href="#BibTeX">BibTeX</a></li>
       </ul>
@@ -71,7 +74,6 @@
 
   <!-- Main content wrapper -->
   <main class="page-main">
-    <!-- KEEP ALL YOUR EXISTING CONTENT HERE (hero + sections + footer) -->
 
     <!-- Back link to personal homepage -->
     <nav class="top-back-nav" aria-label="Back to homepage">
@@ -79,14 +81,15 @@
     </nav>
 
   <!-- Header / Hero -->
-  <!-- ===== HERO (replace your current hero section content with this) ===== -->
 <section class="hero">
   <div class="hero-body">
     <div class="container is-max-desktop">
       <div class="columns is-centered">
         <div class="column has-text-centered">
 
-          <h1 class="title is-1 publication-title">Scaling Reward Modeling without Human Supervision</h1>
+          <h1 class="title is-1 publication-title">Next-token Preference: Scaling Unsupervised Reward Modeling</h1>
+
+          <p class="revision-note">Revised October 5, 2026</p>
 
           <!-- Authors -->
           <div class="is-size-5 publication-authors">
@@ -132,7 +135,6 @@
               <a href="https://hanlin-zhang.com/" target="_blank" rel="noopener noreferrer">
                 Hanlin Zhang
               </a><sup>1</sup>
-              </a>
             </span>
           </div>
           
@@ -153,16 +155,16 @@
 
               <!-- Paper (local PDF) -->
               <span class="link-block">
-                <a href="static/pdfs/2603.02225v1.pdf" target="_blank"
+                <a href="static/pdfs/next-token-preference.pdf" target="_blank" rel="noopener noreferrer"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon"><i class="fas fa-file-pdf"></i></span>
-                  <span>Paper (PDF)</span>
+                  <span>Revised Paper (PDF)</span>
                 </a>
               </span>
 
               <!-- arXiv -->
               <span class="link-block">
-                <a href="https://arxiv.org/abs/2603.02225" target="_blank"
+                <a href="https://arxiv.org/abs/2603.02225" target="_blank" rel="noopener noreferrer"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon"><i class="ai ai-arxiv"></i></span>
                   <span>arXiv</span>
@@ -171,10 +173,10 @@
 
               <!-- Code (GitHub) -->
               <span class="link-block">
-                <a href="#" 
-                   class="external-link button is-normal is-rounded is-dark" style="cursor: not-allowed; opacity: 0.6;" onclick="return false;">
+                <a href="https://github.com/jingxuanf0214/rm-scaling" target="_blank" rel="noopener noreferrer"
+                   class="external-link button is-normal is-rounded is-dark">
                   <span class="icon"><i class="fab fa-github"></i></span>
-                  <span>Code Coming Soon</span>
+                  <span>Code</span>
                 </a>
               </span>
 
@@ -188,835 +190,335 @@
 </section>
 
 
-  <!-- Teaser (Figure 1 recommended) -->
-  <!-- <section class="hero teaser">
-    <div class="container is-max-desktop">
-      <div class="hero-body has-text-centered">
-        <img src="static/images/fig1_workflow.png"
-             alt="Schematic overview: reward model training workflow from web math text"
-             style="max-width:90%;height:auto;border-radius:12px;margin-left:35px;" />
-        <h2 class="subtitle has-text-centered" style="margin-top:1rem;">
-          <strong>Reward-based scaling (RBS)</strong> turns raw web documents into online preference pairs by treating
-          the true continuation as “chosen” and in-batch mismatched continuations as “rejected”
-        </h2>
-      </div>
-    </div>
-  </section> -->
-
-  <!-- Abstract -->
-  <!-- <section class="section hero is-light" id="abstract">
-    <div class="container is-max-desktop">
-      <div class="columns is-centered has-text-centered">
-        <div class="column is-four-fifths">
-          <h2 class="title is-3">Abstract</h2>
-          <div class="content has-text-justified">
-            <p>
-              Learning from feedback is an instrumental process for advancing the capabilities and safety of frontier models,
-              yet its effectiveness is often constrained by cost and scalability. We present a pilot study that explores scaling
-              reward models through <strong>unsupervised</strong> approaches. We operationalize reward-based scaling (RBS),
-              in its simplest form, as preference learning over document prefixes and suffixes drawn from large-scale web corpora.
-              Despite using no human annotations, training on 11M tokens of math-focused web data yields steady gains on
-              RewardBench v1 and v2, with improvements transferring across diverse initialization backbones spanning
-              model families and scales. When applied to best-of-N selection and policy optimization, these reward models
-              improve downstream math performance and match or exceed strong supervised reward-model baselines of similar size.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section> -->
-
-  <!-- Main Content -->
   <section class="section" id="overview">
     <div class="container is-max-desktop">
-
-      <!-- Motivation -->
-      <h3 class="title is-4 has-text-centered" id="motivation">Motivation</h3>
-      <div class="content">
-        <p>
-          Reinforcement learning from human feedback (RLHF) <a href="#ref-1">[1]</a> has been central to aligning modern language models, but it hinges on a critical component: the reward signal. High-quality preference data is expensive to collect and annotate <a href="#ref-2">[2]</a>, <a href="#ref-3">[3]</a>, <a href="#ref-4">[4]</a>. Moreover, even preference labels annotated by human or strong LLM judges can often be subjective and noisy <a href="#ref-1">[1]</a>, <a href="#ref-5">[5]</a>, <a href="#ref-6">[6]</a>, <a href="#ref-7">[7]</a>, <a href="#ref-8">[8]</a>, further amplifying reward hacking behaviors like deception or alignment faking.
-          The table below shows estimated candidate completion and annotation cost on two representative datasets UltraFeedback <a href="#ref-2">[2]</a> and UltraInteract <a href="#ref-3">[3]</a> instantiated with a GPT-4–class model <code>gpt-4o</code> (Dataset statistics from <a href="#ref-9">[9]</a>).
-          <table class="table is-striped is-hoverable is-fullwidth">
-            <!-- <caption style="caption-side: bottom; text-align: center; padding-top: 0.5rem; font-size: 0.90em;">
-              Table 1. Estimated candidate completion and annotation cost instantiated with a GPT-4–class model <code>gpt-4o</code> (Dataset statistics from <a href="#ref-1">[1]</a>).
-            </caption> -->
-            <thead>
-              <tr>
-                <th>Dataset</th>
-                <th class="has-text-right">#Pairs</th>
-                <th class="has-text-right">Prompt Length</th>
-                <th class="has-text-right">Chosen Length</th>
-                <th class="has-text-right">Rejected Length</th>
-                <th class="has-text-right">Completion Cost ($)</th>
-                <th class="has-text-right">Judge cost ($)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>UltraFeedback</td>
-                <td class="has-text-right">340,025</td>
-                <td class="has-text-right">161.5</td>
-                <td class="has-text-right">279.5</td>
-                <td class="has-text-right">211.1</td>
-                <td class="has-text-right">1,444.36</td>
-                <td class="has-text-right">725.83</td>
-              </tr>
-              <tr>
-                <td>UltraInteract</td>
-                <td class="has-text-right">161,927</td>
-                <td class="has-text-right">507.4</td>
-                <td class="has-text-right">396.6</td>
-                <td class="has-text-right">416.7</td>
-                <td class="has-text-right">1,217.89</td>
-                <td class="has-text-right">616.28</td>
-              </tr>
-            </tbody>
-          </table>
-
-          This motivates a key question: 
-          <strong>how much typical reward-model supervision can be learned in an unsupervised manner?</strong>
-          We propose  <strong>Reward-Based Scaling (RBS)</strong>: an unsupervised framework that converts web text into implicit preferences by treating natural continuations as "chosen samples" and mismatched continuations as in-batch negatives "rejected samples"—producing online preference data at essentially <strong>zero annotation cost</strong>.
-        </p>
+      <div class="research-summary content">
+        <p><strong>Can raw web text teach a model what makes a response better?</strong> Next-token preference (NTP) turns the continuation structure of existing text into reward-model supervision, without generating candidates or collecting human or model-generated preference labels.</p>
+        <ul>
+          <li><strong>Transferable rewards:</strong> 11M tokens per corpus yield peak overall RewardBench 2 gains of 7.6–8.3 percentage points across mathematical and general-domain web text.</li>
+          <li><strong>Downstream utility:</strong> the learned rewards improve response selection in math, code, safety, and instruction following, and support math policy optimization.</li>
+          <li><strong>Label efficiency:</strong> NTP initialization with half of the labeled RLHFMix1 data surpasses base initialization trained on the full dataset.</li>
+        </ul>
       </div>
 
-      <hr/>
+      <section class="research-section" aria-labelledby="motivation">
+        <h2 class="title is-4 has-text-centered" id="motivation">Motivation</h2>
+        <div class="content">
+          <p>Reward models guide response selection and policy optimization in reinforcement learning from human feedback (RLHF) <a href="#ref-1">[1]</a>. Conventional preference pipelines require candidate generation and judgments from people or models <a href="#ref-2">[2]</a>, <a href="#ref-3">[3]</a>, <a href="#ref-4">[4]</a>. Automating the judging step still leaves generation and scoring costs.</p>
+          <p>Human and model preferences can also be noisy or inconsistent <a href="#ref-5">[5]</a>, <a href="#ref-6">[6]</a>, <a href="#ref-7">[7]</a>, <a href="#ref-8">[8]</a>. This motivates a question: <strong>how much useful reward supervision is already present in the structure of web text?</strong> NTP uses the relationship between a prefix and its original continuation as an implicit preference signal. All comparisons come from existing text, so constructing them requires neither new responses nor explicit preference annotations.</p>
+        </div>
+      </section>
 
-      <!-- Method -->
-      <h3 class="title is-4 has-text-centered" id="method">Method: Continuation-Based Online Preference Pairing</h3>
-      <div class="content">
-        <p>
+      <section class="research-section" aria-labelledby="method">
+        <h2 class="title is-4 has-text-centered" id="method">Method: Next-token Preference</h2>
+        <div class="content">
+          <p>We concatenate documents into a continuous token stream and divide it into fixed-length blocks. Each block becomes a prefix \(x\) and its original continuation \(y\). Grouping \(B\) nearby chunks into a batch gives one chosen continuation per prefix and \(B-1\) rejected continuations from the other chunks.</p>
+          <p><strong>Nearby negatives matter.</strong> They can share topic, vocabulary, and style with the true continuation while breaking the semantic or logical dependencies across the split. Ranking these alternatives encourages the reward model to learn continuation consistency. Each batch supplies \(B(B-1)\) preference comparisons assembled online.</p>
+        </div>
+      <figure class="research-figure">
+        <a href="static/images/fig1_workflow.png" target="_blank" rel="noopener noreferrer" aria-label="Open full-size figure: NTP workflow: web text is split into prefixes and suffixes, with same-sequence pairs chosen and cross-sequence pairs rejected">
+          <img src="static/images/fig1_workflow.png?v=20261005" alt="NTP workflow: web text is split into prefixes and suffixes, with same-sequence pairs chosen and cross-sequence pairs rejected" width="2400" height="1246" loading="lazy" decoding="async" />
+        </a>
+        <figcaption><a href="static/pdfs/next-token-preference.pdf#page=2" target="_blank" rel="noopener noreferrer">Paper Figure 1</a>. All-to-all scoring constructs a preference-learning signal directly from web text. Select the figure to view it at full size.</figcaption>
+      </figure>
+        <div class="content">
+          <p>For a scalar reward \(s_\theta(x,y)\), the Bradley–Terry objective ranks each original continuation above the in-batch alternatives:</p>
+          <div class="equation">
+            \[
+            \mathcal{L}_{\mathrm{BT}} = -\frac{1}{B(B-1)}
+            \sum_{i=1}^{B}\sum_{j\ne i}
+            \log\sigma\!\left(s_\theta(x_i,y_i)-s_\theta(x_i,y_j)\right).
+            \]
+          </div>
+          <p>We add a quadratic score-centering penalty to limit reward-scale drift and overly large margins:</p>
+          <div class="equation">
+            \[
+            \mathcal{L}_{\mathrm{center}} = \mathbb{E}\!\left[
+            s_\theta(x_i,y_i)^2 + \frac{1}{B-1}\sum_{j\ne i}s_\theta(x_i,y_j)^2
+            \right].
+            \]
+          </div>
+          <p>The final objective is \(\mathcal{L}=\mathcal{L}_{\mathrm{BT}}+c\,\mathcal{L}_{\mathrm{center}}\), with \(c=0.01\) in the reported recipe. The split can occur mid-sentence; preserving sentence boundaries is an ablation, not a requirement.</p>
+        </div>
+      </section>
+
+      <section class="research-section" aria-labelledby="protocol">
+        <h2 class="title is-4 has-text-centered" id="protocol">Experimental Protocol</h2>
+        <div class="content">
+          <p><strong>Training data.</strong> Our main corpus is FineMath-4plus. We also test MegaMath-Web-Pro-Max (mathematical web text) and FineWeb-Edu (general educational web text), using <strong>11M tokens per corpus</strong>. The default split uses a 512-token prefix and a 1,024-token continuation.</p>
+          <p><strong>Backbones.</strong> We train base Llama-3.2-1B and Llama-3.2-3B models, plus instruction-tuned Qwen2.5-3B-Instruct and Qwen2.5-7B-Instruct models. Llama-3.2-3B is the controlled-ablation backbone. The default batch size is 32; Qwen2.5-7B-Instruct uses 8.</p>
+          <p><strong>Preference alignment.</strong> We report overall RewardBench and RewardBench 2 accuracy, alongside:</p>
+          <ul>
+            <li><strong>In-domain (ID):</strong> RewardBench Reasoning (math and code) and RewardBench 2 Math.</li>
+            <li><strong>OOD Safety:</strong> the Safety subset of each benchmark.</li>
+            <li><strong>OOD Others:</strong> the remaining subsets, including conversational quality in RewardBench and factuality, ties, focus, and precise instruction following in RewardBench 2.</li>
+          </ul>
+          <p><strong>Downstream evaluation.</strong> Best-of-<em>N</em> selection tests math, code, safety, and instruction following with 1B, 3B, and 8B actors. GRPO tests the reward signal for math policy training. Finally, curated-preference training tests NTP as an initialization for more label-efficient supervised reward learning.</p>
+        </div>
+      </section>
+
+      <section class="research-section" aria-labelledby="data-scaling">
+        <h2 class="title is-4 has-text-centered" id="data-scaling">Data Scaling and Transfer</h2>
+        <div class="content">
+          <p><strong>Reward learning improves as more web text is used.</strong> With Llama-3.2-3B, the overall trend across the 11M-token budget is upward on both benchmarks, with gains extending beyond mathematical reasoning. At 11M tokens, RewardBench Safety improves by 16.0 percentage points over initialization, compared with 13.1 points for Reasoning and 7.0 points for Chat Hard.</p>
+        </div>
+      <figure class="research-figure">
+        <a href="static/images/fig2_scaling.png" target="_blank" rel="noopener noreferrer" aria-label="Open full-size figure: RewardBench and RewardBench 2 learning curves across the 11M-token FineMath budget">
+          <img src="static/images/fig2_scaling.png?v=20261005" alt="RewardBench and RewardBench 2 learning curves across the 11M-token FineMath budget" width="3087" height="928" loading="lazy" decoding="async" />
+        </a>
+        <figcaption><a href="static/pdfs/next-token-preference.pdf#page=5" target="_blank" rel="noopener noreferrer">Paper Figure 2</a>. Continuation-based reward learning transfers to in-domain reasoning and out-of-domain preference judgments. Select the figure to view it at full size.</figcaption>
+      </figure>
+        <div class="research-pair research-pair-text">
           <div class="content">
-            <p>
-              We present an <strong>online, continuation-based preference labeling</strong> approach that turns raw web text into
-              pairwise supervision for training a reward model (RM)—no curated preference pairs or human labels required.
-            </p>
-          
-            <p>
-              The key idea is to reuse <strong>next-token continuation</strong> as an implicit preference signal. For each text sequence,
-              we sample a random breakpoint, split it into a prefix prompt
-              <em>p</em> and its true continuation <em>r</em>.
-              In a minibatch of <em>B</em> prefix–continuation pairs
-              <span style="white-space: nowrap;">{(<em>p</em><sub>i</sub>, <em>r</em><sub>i</sub>)}</span><sub>i=1</sub><sup>B</sup>,
-              we treat <em>r</em><sub>i</sub> as the chosen response for <em>p</em><sub>i</sub>, and use the other continuations
-              <span style="white-space: nowrap;">{<em>r</em><sub>j</sub>}</span><sub>j &ne; i</sub>
-              as rejected in-batch negatives. This creates an all-to-all set of preference comparisons on the fly.
-            </p>
-
-            <p>
-              Given an RM score \(s_\theta(p,r)\), we optimize a <strong>Bradley–Terry (pairwise logistic)</strong>
-              objective with in-batch negatives:
-            </p>
-          
-            <div class="equation">
-              \[
-                \mathcal{L}_{\text{BT}}
-                = \frac{1}{B}\sum_{i=1}^{B}\frac{1}{B-1}\sum_{j\neq i}
-                -\log \sigma\!\big(s_{\theta}(p_i, r_i) - s_{\theta}(p_i, r_j)\big).
-              \]
-            </div>
-            <p>
-              with a quadratic <strong>score-centering regularizer</strong> to prevent
-              reward drift and overly confident, large-magnitude scores:
-            </p>
-          
-            <div class="equation">
-              \[
-                \mathcal{L}_{\text{center}} =
-                \mathbb{E}\Big[ s_{\theta}(p_i,r_i)^2 + \frac{1}{B-1}\sum_{j\neq i} s_{\theta}(p_i,r_j)^2 \Big].
-              \]
-            </div>
-          
-            <p>
-              Making up our final training objective: 
-              \( \mathcal{L}=\mathcal{L}_{\text{BT}} + c\,\mathcal{L}_{\text{center}} \), where \(c\) controls the strength of centering.
-            </p>
-          
-            <!-- <p>
-              where \(c\) controls the strength of centering. In practice, this constraint makes RM training
-              <strong>more stable and robust</strong> on raw web data by reducing overfitting to corpus artifacts and
-              keeping scores comparable across diverse prompts.
-            </p> -->
+            <p><strong>The recipe transfers across model families and sizes.</strong> All four trained models rank in the top 10 on RewardBench 2 within the paper’s parameter-matched cohorts (0.5–1.5B, 3–4B, and 7B).</p>
           </div>
-          
-        </p>
-      </div>
-
-      <div class="columns is-vcentered is-variable is-6">
-        <div class="column">
-          <figure class="image">
-            <img src="static/images/fig1_workflow.png"
-                 alt="Workflow diagram showing prefix/suffix splitting and in-batch preference pairing" />
-          </figure>
-          <!-- <p class="has-text-centered is-size-6" style="margin-top:0.5rem;">
-            Figure 1: Online preference pairing from web text (export from paper).
-          </p> -->
-        </div>
-      </div>
-
-      <hr/>
-
-      <h3 class="title is-4 has-text-centered" id="protocol">Protocol</h3>
-      <div class="content">
-        <p>
-          We evaluate our RM training recipe with a unified protocol spanning training, preference-alignment benchmarking, and downstream utility evaluation(best-of-N selection and RL).
-        </p>
-
-        <h4 class="title is-5">Data and RM Backbones</h4>
-        <p>
-          <strong>Training corpora.</strong> We train RMs on math-heavy web text from FineMath and InfiMM-WebMath
-          under a fixed budget of 11M tokens. Data entries are concatenated into a continuous stream,
-          chunked into fixed-length sequences of <em>L</em> tokens, and split into
-          prefix–suffix pairs with <em>L<sub>1</sub></em> prompt and <em>L<sub>2</sub></em> continuation tokens.
-        </p>
-        <p>
-          <strong>Backbones.</strong> To test robustness across model types and scales, we train RMs
-          from two backbone families:
-        </p>
-        <ul>
-          <li><strong>Base:</strong> Llama-3.2-1B, Llama-3.2-3B</li>
-          <li><strong>Instruction-tuned:</strong> Qwen2.5-3B-Instruct, Qwen2.5-7B-Instruct</li>
-        </ul>
-
-        <h4 class="title is-5">Preference-Alignment Benchmarks</h4>
-        <p>
-          We evaluate preference alignment on <strong>RewardBench v1</strong> and <strong>RewardBench v2</strong>.
-          As our training data is math-focused, we report RewardBench subsets performance categorized into in-domain (ID) and out-of-domain (OOD). Specifically at the 4 following levels:
-        </p>
-        <ul>
-          <li><strong>Overall:</strong> average across all subsets</li>
-          <li><strong>ID:</strong> <code>Reasoning</code> subset for RewardBench v1 and <code>Math</code> subset for RewardBench v2</li>
-          <li><strong>OOD-Safety:</strong> <code>Safety</code> subsets for both RewardBench v1 and v2</li>
-          <li><strong>OOD-Others:</strong> other subsets aggregated</li>
-        </ul>
-
-        <h4 class="title is-5">Downstream Utility: Best-of-<em>N</em> Selection</h4>
-        
-        <p>
-          <strong>Tasks.</strong>
-          ID: MATH500, GSM8K. OOD-Safety: Toxigen, IFEval.
-        </p>
-      
-        <p>
-          <strong>Protocol.</strong>
-          We evaluate two trained reward models (<code>FineMath-RM-Llama-3.2-3B</code> and <code>FineMath-RM-Qwen-2.5-7B</code>)
-          using best-of-<em>N</em>: for each input, we sample <em>N</em> candidate solutions from an actor, score each candidate
-          with the RM, and evaluate the highest-scoring selection. We sweep
-          <em>N</em> &isin; {1, 2, 4, 8, 16, 32} using three actors:
-          <code>Llama-3.2-1B-Instruct</code>, <code>Llama-3.2-3B-Instruct</code>, and <code>Llama-3.1-8B-Instruct</code>.
-        </p>
-      
-        <p>
-          <strong>Metric.</strong>
-          Accuracy as a function of <em>N</em>; we summarize with <strong>MAP</strong>, the maximum accuracy achieved along the
-          best-of-<em>N</em> curve.
-        </p>
-
-        <h4 class="title is-5">Downstream Utility: Policy Optimization</h4>
-        
-        <p>
-          <strong>Tasks.</strong>
-          To assess how well the RM serves as a learning signal for <em>actor training</em>, we train actors on the MATH and GSM8K
-          training splits and evaluate generalization on the corresponding test splits.
-        </p>
-      
-        <p>
-          <strong>Protocol.</strong>
-          We train actors with GRPO using <code>FineMath-RM-Qwen-2.5-7B</code> to provide the reward signal. We generate rollouts with
-          <code>Llama-3.2-3B-Instruct</code> and <code>Llama-3.1-8B-Instruct</code> actors under a fixed epoch budget.
-        </p>
-      
-        <p>
-          <strong>Metric.</strong>
-          <strong>mean@1</strong> accuracy on the corresponding test sets.
-        </p>
-        
-      <hr/>
-
-      <!-- Experiments / Results -->
-      <h3 class="title is-4 has-text-centered" id="data-scaling">Data Scaling</h3>
-
-      <div class="content">
-        <p>
-          <strong>In a controlled study on Llama-3.2-3B, training with our method on FineMath shows steady performance gains on all subsets of RewardBench v1 and v2 over the 11M-token budget,</strong> indicating that raw math web text can provide a useful preference-learning signal even without curated comparison data.
-          
-        </p>
-      </div>
-
-      <!-- Figure 2 -->
-      <!-- <div class="columns is-centered">
-        <div class="column is-10">
-          <figure class="image">
-            <img src="static/images/fig2_scaling.png"
-                 alt="Scalability with respect to data size: RewardBench v1/v2 vs token budget" />
-          </figure> -->
-          <!-- <p class="has-text-centered is-size-6" style="margin-top:0.5rem;">
-            Figure 2. Scalability of our method with respect to data size.
-          </p> -->
-        <!-- </div>
-      </div>
-       -->
-
-       <style>
-        /* Booktabs-like table styling (matches your screenshot) */
-        .rb-booktabs {
-          width: 100%;
-          border-collapse: collapse;
-          font-family: inherit;
-          font-size: 0.95rem;
-          line-height: 1.15;
-          border-top: 2px solid #111;     /* top rule */
-          border-bottom: 2px solid #111;  /* bottom rule */
-        }
-      
-        .rb-booktabs th,
-        .rb-booktabs td {
-          padding: 0.35rem 0.5rem;
-          border: none;                  /* no vertical lines */
-          vertical-align: middle;
-          white-space: nowrap;
-        }
-      
-        .rb-booktabs thead th {
-          font-weight: 700;
-        }
-      
-        /* thin rule under the header (midrule) */
-        .rb-booktabs thead {
-          border-bottom: 1px solid #111;
-        }
-      
-        /* group headers: RB v1 / RB v2 with partial underline (cmidrule-like) */
-        .rb-booktabs th.group {
-          text-align: center;
-          position: relative;
-          padding-bottom: 0.55rem;
-        }
-        .rb-booktabs th.group::after {
-          content: "";
-          position: absolute;
-          left: 12%;
-          right: 12%;
-          bottom: 0.2rem;
-          border-bottom: 1px solid #111;
-        }
-      
-        .rb-booktabs th.left {
-          text-align: left;
-        }
-      
-        .rb-booktabs td.left {
-          text-align: left;
-        }
-      
-        .rb-booktabs td.num,
-        .rb-booktabs th.num {
-          text-align: center; /* screenshot looks centered */
-        }
-      </style>
-      
-      <!-- Plot -->
-      <!-- <div style="margin-bottom: 2rem;">
-        <figure class="image">
-          <img
-            src="static/images/fig2_scaling.png"
-            alt="Scalability with respect to data size: RewardBench v1/v2 vs token budget"
-          />
-        </figure>
-      </div> -->
-      <div class="columns is-centered">
-        <div class="column is-9">
-          <figure class="image">
-            <img src="static/images/fig2_scaling.png" alt="Scalability with respect to data size: RewardBench v1/v2 vs token budget" />
-          </figure>
-        </div>
-      </div>
-      <div class="columns is-vcentered is-variable is-6" style="align-items: stretch;">
-        <!-- Text -->
-        <div class="column is-5" style="display:flex;">
-          <div style="width:100%; display:flex; flex-direction:column; justify-content:center;">
-            <div class="content">
-              <p>
-                <strong>Moreover, we find that the recipe transfers well across model families and scales. </strong>When compared within parameter-matched cohorts, all trained RMs rank strongly—top-10 on RewardBench v2 in their respective cohort—and show similarly consistent competitiveness on RewardBench v1, indicating robust cross-backbone transfer.
-              </p>
-            </div>
+          <div class="table-container research-table-wrap" role="region" aria-labelledby="backbone-caption" tabindex="0">
+            <table class="table is-fullwidth research-table">
+              <caption id="backbone-caption"><a href="static/pdfs/next-token-preference.pdf#page=6" target="_blank" rel="noopener noreferrer">Paper Table 2</a>. Scores (%) and leaderboard ranks as reported in the paper; ranks are within parameter-matched cohorts.</caption>
+              <thead>
+                <tr><th scope="col" rowspan="2">Backbone</th><th scope="colgroup" colspan="2">RewardBench</th><th scope="colgroup" colspan="2">RewardBench 2</th></tr>
+                <tr><th scope="col">Score</th><th scope="col">Rank</th><th scope="col">Score</th><th scope="col">Rank</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">Llama-3.2-1B</th><td>60.0</td><td>3</td><td>33.2</td><td>3</td></tr>
+                <tr><th scope="row">Llama-3.2-3B</th><td>65.6</td><td>4</td><td>36.2</td><td>9</td></tr>
+                <tr><th scope="row">Qwen2.5-3B-Instruct</th><td>70.0</td><td>3</td><td>46.2</td><td>8</td></tr>
+                <tr><th scope="row">Qwen2.5-7B-Instruct</th><td>73.8</td><td>18</td><td>57.0</td><td>5</td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
-        <!-- Table -->
-        <div class="column is-7 is-offset-1" style="display:flex;">
-          <div style="display: flex; justify-content: center;">
-            <div style="max-width: 320px;">
-              <table class="rb-booktabs">
-                <thead>
-                  <tr>
-                    <th class="left" rowspan="2">Backbone</th>
-                    <th class="group" colspan="2">RB v1</th>
-                    <th class="group" colspan="2">RB v2</th>
-                  </tr>
-                  <tr>
-                    <th class="num">Score</th>
-                    <th class="num">Rank</th>
-                    <th class="num">Score</th>
-                    <th class="num">Rank</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="left">Llama-3.1-1B</td>
-                    <td class="num">60.0</td>
-                    <td class="num">3</td>
-                    <td class="num">33.2</td>
-                    <td class="num">3</td>
-                  </tr>
-                  <tr>
-                    <td class="left">Llama-3.1-3B</td>
-                    <td class="num">65.6</td>
-                    <td class="num">4</td>
-                    <td class="num">36.2</td>
-                    <td class="num">9</td>
-                  </tr>
-                  <tr>
-                    <td class="left">Qwen2.5-3B-Inst.</td>
-                    <td class="num">70.0</td>
-                    <td class="num">3</td>
-                    <td class="num">46.2</td>
-                    <td class="num">8</td>
-                  </tr>
-                  <tr>
-                    <td class="left">Qwen2.5-7B-Inst.</td>
-                    <td class="num">73.8</td>
-                    <td class="num">18</td>
-                    <td class="num">57.0</td>
-                    <td class="num">5</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+      </section>
+
+      <section class="research-section" aria-labelledby="curated-comparison">
+        <h2 class="title is-4 has-text-centered" id="curated-comparison">Comparison with Curated Preferences</h2>
+        <div class="research-pair research-pair-text">
+          <div class="content">
+            <p><strong>At the same 11M-token budget, NTP produces larger RewardBench 2 gains than training on the tested curated preference datasets.</strong> FineMath NTP improves overall accuracy by 7.7 percentage points, compared with 1.8 for Skywork-80K-v0.2 and 0.8 for RLHFMix1. Training on the full curated datasets remains stronger, but requires substantially more labeled data.</p>
+          </div>
+          <div class="table-container research-table-wrap" role="region" aria-labelledby="curated-caption" tabindex="0">
+            <table class="table is-fullwidth research-table research-table-descriptive">
+              <caption id="curated-caption"><a href="static/pdfs/next-token-preference.pdf#page=5" target="_blank" rel="noopener noreferrer">Paper Table 1</a>. Overall gains over Llama-3.2-3B initialization. The first three rows share a token budget; the final two use the full labeled datasets.</caption>
+              <thead><tr><th scope="col">Training data / method</th><th scope="col">Budget</th><th scope="col">RewardBench 2 gain (pp)</th></tr></thead>
+              <tbody>
+                <tr><th scope="row"><strong>FineMath NTP</strong></th><td>11M tokens</td><td><strong>+7.7</strong></td></tr>
+                <tr><th scope="row">Skywork-80K-v0.2</th><td>≈9K pairs (11M tokens)</td><td>+1.8</td></tr>
+                <tr><th scope="row">RLHFMix1</th><td>≈22K pairs (11M tokens)</td><td>+0.8</td></tr>
+                <tr><th scope="row">Skywork-80K-v0.2</th><td>77K pairs (full dataset)</td><td>+9.8</td></tr>
+                <tr><th scope="row">RLHFMix1</th><td>244K pairs (full dataset)</td><td>+8.3</td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
-      </div>
-      
-      
+      </section>
 
-      <hr/>
-
-      <!-- Ablations -->
-      <h3 class="title is-4 has-text-centered" id="ablations">Recipe Ablations</h3>
-      <div class="content">
-        <p>
-          We ablate key factors in the training pipeline:
-          <strong>batch size</strong>, <strong>data quality</strong>, <strong>splitting format</strong>
-          and <strong>centering loss</strong>.
-        </p>
-      </div>
-           <div class="content">
-             <p>
-               <strong>Increasing batch size in our online preference pairing scheme boosts reward model performance </strong> because each update gets <span><em>B</em></span> positives and <span><em>B</em>(<em>B</em>&minus;1)</span> cross-pair negatives, making supervision grow nearly quadratically with <span><em>B</em></span>. In experiments, larger batches yield higher and more stable RewardBench v2 gains—ID keeps improving with <span><em>B</em></span>, while OOD benefits mostly saturate beyond <span><em>B</em>=16</span>.
-             </p>
-           </div>
-           <!-- Ablation: Batch size (table left) + curves right -->
-<div class="columns is-vcentered is-variable is-6" style="align-items: stretch;">
-
-  <!-- Left: Table -->
-  <div class="column is-4" style="display:flex;">
-    <div style="width:90%; display:flex; flex-direction:column; justify-content:center;">
-      <table class="table is-narrow is-fullwidth paperlike-table">
-        <thead>
-          <tr>
-            <th>batch size</th>
-            <th class="has-text-right">ID</th>
-            <th class="has-text-right">OOD Safety</th>
-            <th class="has-text-right">OOD others</th>
-            <th class="has-text-right">RBv2</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>8</td>
-            <td class="has-text-right">+9.6</td>
-            <td class="has-text-right">+3.4</td>
-            <td class="has-text-right">+0.6</td>
-            <td class="has-text-right">+1.0</td>
-          </tr>
-          <tr>
-            <td>16</td>
-            <td class="has-text-right">+10.7</td>
-            <td class="has-text-right"><strong>+8.3</strong></td>
-            <td class="has-text-right"><strong>+7.7</strong></td>
-            <td class="has-text-right">+6.7</td>
-          </tr>
-          <tr>
-            <td><strong>32</strong></td>
-            <td class="has-text-right"><strong>+16.1</strong></td>
-            <td class="has-text-right">+5.4</td>
-            <td class="has-text-right">+7.4</td>
-            <td class="has-text-right"><strong>+7.7</strong></td>
-          </tr>
-        </tbody>
-      </table>
-
-      <!-- <p class="has-text-centered is-size-7" style="margin-top:0.25rem; opacity:0.85;">
-        (a) Peak RewardBench v2 subset and average gains vs. batch size.
-      </p> -->
-    </div>
-  </div>
-
-  <!-- Right: Curves -->
-  <div class="column is-7 is-offset-1" style="display:flex;">
-    <div style="width:100%; display:flex; flex-direction:column; justify-content:center;">
-      <figure class="image" style="margin:0;">
-        <img src="static/images/fig3_batchsize.png"
-             alt="RewardBench v2 learning curves across 11M token budget vs. batch size"
-             style="width:100%; height:auto; max-height:320px; object-fit:contain;" />
-      </figure>
-
-      <!-- <p class="has-text-centered is-size-7" style="margin-top:0.25rem; opacity:0.85;">
-        (b) RewardBench v2 learning curves across 11M tokens vs. batch size.
-      </p> -->
-    </div>
-  </div>
-
-</div>
-
-<p style="margin-top:1.5rem; margin-bottom:0.5rem; font-size:1.08em; text-align:left;">
-  <strong>Higher-quality raw math text yields larger reward-model gains.</strong> <code>FineMath-4plus</code> consistently outperforms <code>Infiwebmath-4plus</code> with bigger ID/OOD improvements and a higher average RewardBench v2 boost, while also learning more steadily over the 11M-token budget.
-</p>
-
-
-<!-- Ablation: Dataset choice (table left) + curves right -->
-<div class="columns is-vcentered is-variable is-6" style="align-items: stretch;">
-
-  <!-- Left: Table -->
-  <div class="column is-4" style="display:flex;">
-    <div style="width:90%; display:flex; flex-direction:column; justify-content:center;">
-      <table class="table is-narrow is-fullwidth paperlike-table">
-        <thead>
-          <tr>
-            <th>dataset</th>
-            <th class="has-text-right">ID</th>
-            <th class="has-text-right">OOD Safety</th>
-            <th class="has-text-right">OOD others</th>
-            <th class="has-text-right">RBv2</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td style="white-space: normal;">
-              infiweb<wbr>math
-            </td>
-            <td class="has-text-right">+14.2</td>
-            <td class="has-text-right">+4.4</td>
-            <td class="has-text-right">+5.1</td>
-            <td class="has-text-right">+5.3</td>
-          </tr>
-          <tr>
-            <td><strong>finemath</strong></td>
-            <td class="has-text-right"><strong>+16.1</strong></td>
-            <td class="has-text-right"><strong>+5.4</strong></td>
-            <td class="has-text-right"><strong>+7.4</strong></td>
-            <td class="has-text-right"><strong>+7.7</strong></td>
-          </tr>
-        </tbody>
-      </table>
-
-      <!-- <p class="has-text-centered is-size-7" style="margin-top:0.25rem; opacity:0.85;">
-        (a) Peak RewardBench v2 subset and average gains vs. dataset choice.
-      </p> -->
-    </div>
-  </div>
-
-  <!-- Right: Curves -->
-  <div class="column is-7 is-offset-1" style="display:flex;">
-    <div style="width:100%; display:flex; flex-direction:column; justify-content:center;">
-      <figure class="image" style="margin:0;">
-        <img src="static/images/fig4_dataquality.png"
-             alt="RewardBench v2 learning curves across 11M token budget vs. training datasets"
-             style="width:100%; height:auto; max-height:320px; object-fit:contain;" />
-      </figure>
-
-      <!-- <p class="has-text-centered is-size-7" style="margin-top:0.25rem; opacity:0.85;">
-        (b) RewardBench v2 learning curves across 11M tokens vs. training datasets.
-      </p> -->
-    </div>
-  </div>
-
-</div>
-
-      <p style="margin-top:1.25rem;">
-        <strong>Allowing mid-sentence splits (&ldquo;break sentence&rdquo;) produces substantially larger RewardBench v2 gains than splitting only at sentence boundaries, improving both ID and OOD performance.</strong> This is likely because break-sentence batching creates harder, more contextually confusable in-batch negatives, forcing the reward model to learn finer-grained semantic consistency.
-      </p>
-
-
-      <!-- Ablation: table (left) + plot (right) -->
-<div class="columns is-vcentered is-variable is-7" style="align-items: stretch;">
-
-  <!-- Left: Table panel -->
-  <div class="column is-4" style="display:flex;">
-    <div style="width:100%; display:flex; flex-direction:column; justify-content:center;">
-      <table class="table is-narrow is-fullwidth paperlike-table">
-        <thead>
-          <tr>
-            <th>splitting</th>
-            <th class="has-text-right">ID</th>
-            <th class="has-text-right">OOD Safety</th>
-            <th class="has-text-right">OOD Others</th>
-            <th class="has-text-right">RBv2</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>preserve sentence</td>
-            <td class="has-text-right">+4.6</td>
-            <td class="has-text-right">+1.7</td>
-            <td class="has-text-right">+3.5</td>
-            <td class="has-text-right">+0.8</td>
-          </tr>
-          <tr>
-            <td><strong>break sentence</strong></td>
-            <td class="has-text-right"><strong>+16.1</strong></td>
-            <td class="has-text-right"><strong>+5.4</strong></td>
-            <td class="has-text-right"><strong>+7.4</strong></td>
-            <td class="has-text-right"><strong>+7.7</strong></td>
-          </tr>
-        </tbody>
-      </table>
-
-      <!-- <p class="has-text-centered is-size-7" style="margin-top:0.25rem; opacity:0.85;">
-        (a) Peak RBv2 subset gains vs. splitting design.
-      </p> -->
-    </div>
-  </div>
-
-  <!-- Right: Plot panel -->
-  <div class="column is-7 is-offset-1" style="display:flex;">
-    <div style="width:100%; display:flex; flex-direction:column; justify-content:center;">
-      <figure class="image" style="margin:0;">
-        <!-- Use a single combined plot image from the paper if you have it -->
-        <img src="static/images/fig5_splitting.png"
-             alt="RewardBench v2 learning curves vs. data splitting design"
-             style="width:100%; height:auto; max-height:320px; object-fit:contain;" />
-      </figure>
-
-      <!-- <p class="has-text-centered is-size-7" style="margin-top:0.25rem; opacity:0.85;">
-        (b) RBv2 learning curves across 11M tokens vs. splitting design.
-      </p> -->
-    </div>
-  </div>
-
-</div>
-
-<p style="margin-top:1.25rem;">
-  <strong>Adding the score-centering regularizer stabilizes reward-model training on noisy web text and improves overall RewardBench v2 peak gains </strong> (+7.7 vs. +6.4), whereas removing it yields uneven, less reliable improvements. Centering also makes best-of-(N) selection much more dependable—boosting GSM8K (<span style="font-family:monospace;">ΔMAP</span>, +5.2 vs. +2.8) and avoiding the large-(N) degradation seen with uncentered rewards.
-</p>
-
-<!-- Ablation: Centering loss (table left) + curves right -->
-<div class="columns is-vcentered is-variable is-7" style="align-items: stretch;">
-
-  <!-- Left: Table -->
-  <div class="column is-4" style="display:flex;">
-    <div style="width:100%; display:flex; flex-direction:column; justify-content:center;">
-      <table class="table is-narrow is-fullwidth paperlike-table">
-        <thead>
-          <tr>
-            <th>center loss</th>
-            <th class="has-text-right">ID</th>
-            <th class="has-text-right">OOD Safety</th>
-            <th class="has-text-right">OOD others</th>
-            <th class="has-text-right">RBv2</th>
-            <th class="has-text-right">BoN</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>w/o</td>
-            <td class="has-text-right"><strong>+16.9</strong></td>
-            <td class="has-text-right"><strong>+5.9</strong></td>
-            <td class="has-text-right"><strong>+8.6</strong></td>
-            <td class="has-text-right">+6.4</td>
-            <td class="has-text-right">+2.8</td>
-          </tr>
-          <tr>
-            <td><strong>w/</strong></td>
-            <td class="has-text-right">+16.4</td>
-            <td class="has-text-right">+5.7</td>
-            <td class="has-text-right">+7.4</td>
-            <td class="has-text-right"><strong>+7.7</strong></td>
-            <td class="has-text-right"><strong>+5.4</strong></td>
-          </tr>
-        </tbody>
-      </table>
-
-      <!-- <p class="has-text-centered is-size-7" style="margin-top:0.25rem; opacity:0.85;">
-        (a) Peak RBv2 subsets, average gains, and BoN max achieved performance (MAP) gain vs. centering loss.
-      </p> -->
-    </div>
-  </div>
-
-  <!-- Right: Curves -->
-  <div class="column is-7 is-offset-1" style="display: flex; justify-content: flex-end;">
-    <div style="display:flex; justify-content:flex-end; width:100%; min-width:0;">
-      <figure class="image" style="margin:0;">
-        <img src="static/images/fig6_centering.png"
-             alt="RewardBench v2 learning curves across 11M token budget vs. centering loss"
-             style="width:100%; height:auto; max-height:320px; object-fit:contain;" />
-      </figure>
-
-      <!-- <p class="has-text-centered is-size-7" style="margin-top:0.25rem; opacity:0.85;">
-        (b) RewardBench v2 learning curves across 11M tokens vs. centering loss.
-      </p> -->
-    </div>
-  </div>
-
-</div>
-
-      <!-- <div class="columns is-variable is-6 is-multiline">
-        <div class="column is-6">
-          <figure class="image">
-            <img src="static/images/fig3_batchsize.png" alt="Effect of batch size on RewardBench v2 gains" />
-          </figure>
-          <p class="has-text-centered is-size-6" style="margin-top:0.5rem;">Figure 3: Batch size effect.</p>
+      <section class="research-section" aria-labelledby="ablations">
+        <h2 class="title is-4 has-text-centered" id="ablations">Recipe Ablations</h2>
+        <div class="content">
+          <h3 class="title is-5">Batch size</h3>
+          <p>Increasing batch size expands the number of in-batch comparisons and improves peak overall RewardBench 2 gains. ID gains continue to grow with batch size, while OOD gains show little benefit beyond \(B=16\). This also increases scoring work because the number of comparisons grows quadratically.</p>
         </div>
-        <div class="column is-6">
-          <figure class="image">
-            <img src="static/images/fig4_dataquality.png" alt="Effect of dataset quality (FineMath vs Infiwebmath)" />
+        <div class="research-pair research-pair-plot">
+          <div class="table-container research-table-wrap" role="region" aria-labelledby="batch-caption" tabindex="0">
+            <table class="table is-fullwidth research-table research-table-compact">
+              <caption id="batch-caption"><a href="static/pdfs/next-token-preference.pdf#page=6" target="_blank" rel="noopener noreferrer">Paper Figure 3a</a>. Peak RewardBench 2 gains over initialization, in percentage points. Subset peaks need not occur at the same checkpoint.</caption>
+              <thead><tr><th scope="col">Batch size</th><th scope="col">ID</th><th scope="col">OOD Safety</th><th scope="col">OOD Others</th><th scope="col">Overall</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">8</th><td>+9.6</td><td>+3.4</td><td>+0.6</td><td>+1.0</td></tr>
+                <tr><th scope="row">16</th><td>+10.7</td><td><strong>+8.3</strong></td><td><strong>+7.7</strong></td><td>+6.7</td></tr>
+                <tr><th scope="row">32</th><td><strong>+16.1</strong></td><td>+5.4</td><td>+7.4</td><td><strong>+7.7</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <figure class="research-figure">
+            <a href="static/images/fig3_batchsize.png" target="_blank" rel="noopener noreferrer" aria-label="Open full-size figure: RewardBench 2 learning curves for batch sizes 8, 16, and 32">
+              <img src="static/images/fig3_batchsize.png?v=20261005" alt="RewardBench 2 learning curves for batch sizes 8, 16, and 32" width="2235" height="619" loading="lazy" decoding="async" />
+            </a>
+            <figcaption><a href="static/pdfs/next-token-preference.pdf#page=6" target="_blank" rel="noopener noreferrer">Paper Figure 3b</a>. Larger batches improve the training trajectory across the 11M-token budget. Select the figure to view it at full size.</figcaption>
           </figure>
-          <p class="has-text-centered is-size-6" style="margin-top:0.5rem;">Figure 4: Data quality effect.</p>
         </div>
-        <div class="column is-6">
-          <figure class="image">
-            <img src="static/images/fig5_splitting.png" alt="Effect of preserve sentence vs break sentence splitting" />
+        <div class="content">
+          <h3 class="title is-5">Splitting format</h3>
+          <p><strong>Allowing a split within a sentence produces stronger gains.</strong> Enforcing sentence boundaries discards candidate spans during packing and leaves less contextually similar negatives. Contiguous chunks preserve more shared context, making mismatched continuations harder to reject through topic or style alone.</p>
+        </div>
+        <div class="research-pair research-pair-plot">
+          <div class="table-container research-table-wrap" role="region" aria-labelledby="splitting-caption" tabindex="0">
+            <table class="table is-fullwidth research-table research-table-compact">
+              <caption id="splitting-caption"><a href="static/pdfs/next-token-preference.pdf#page=6" target="_blank" rel="noopener noreferrer">Paper Figure 4a</a>. Peak RewardBench 2 gains over initialization, in percentage points.</caption>
+              <thead><tr><th scope="col">Splitting format</th><th scope="col">ID</th><th scope="col">OOD Safety</th><th scope="col">OOD Others</th><th scope="col">Overall</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">Preserve sentence</th><td>+4.6</td><td>+1.7</td><td>+3.5</td><td>+0.8</td></tr>
+                <tr><th scope="row">Break sentence</th><td><strong>+16.1</strong></td><td><strong>+5.4</strong></td><td><strong>+7.4</strong></td><td><strong>+7.7</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <figure class="research-figure">
+            <a href="static/images/fig5_splitting.png" target="_blank" rel="noopener noreferrer" aria-label="Open full-size figure: RewardBench 2 learning curves comparing sentence-preserving and sentence-breaking splits">
+              <img src="static/images/fig5_splitting.png?v=20261005" alt="RewardBench 2 learning curves comparing sentence-preserving and sentence-breaking splits" width="2235" height="619" loading="lazy" decoding="async" />
+            </a>
+            <figcaption><a href="static/pdfs/next-token-preference.pdf#page=6" target="_blank" rel="noopener noreferrer">Paper Figure 4b</a>. Breaking sentences retains more contextually confusable in-batch negatives. Select the figure to view it at full size.</figcaption>
           </figure>
-          <p class="has-text-centered is-size-6" style="margin-top:0.5rem;">Figure 5: Splitting design effect.</p>
         </div>
-        <div class="column is-6">
-          <figure class="image">
-            <img src="static/images/fig6_centering.png" alt="Effect of centering loss on stability and BoN MAP" />
+        <div class="content">
+          <h3 class="title is-5">Score centering</h3>
+          <p>Centering improves peak overall RewardBench 2 gain from 6.4 to 7.7 points. Its larger benefit is in downstream selection: on GSM8K with the Llama-3.1-8B-Instruct actor, the gain in best-of-<em>N</em> Maximum Achieved Performance (ΔMAP) increases from <strong>2.8 to 5.4 percentage points</strong>. Without centering, accuracy peaks at small <em>N</em> and eventually falls below random selection.</p>
+        </div>
+        <div class="research-pair research-pair-plot">
+          <div class="table-container research-table-wrap" role="region" aria-labelledby="centering-caption" tabindex="0">
+            <table class="table is-fullwidth research-table research-table-compact">
+              <caption id="centering-caption"><a href="static/pdfs/next-token-preference.pdf#page=7" target="_blank" rel="noopener noreferrer">Paper Figure 5a</a>. Peak RewardBench 2 subset/overall gains and GSM8K BoN ΔMAP, in percentage points.</caption>
+              <thead><tr><th scope="col">Centering</th><th scope="col">ID</th><th scope="col">OOD Safety</th><th scope="col">OOD Others</th><th scope="col">Overall</th><th scope="col">BoN ΔMAP</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">Without</th><td>+16.9</td><td>+5.9</td><td>+8.6</td><td>+6.4</td><td>+2.8</td></tr>
+                <tr><th scope="row">With</th><td>+16.4</td><td>+5.7</td><td>+7.4</td><td><strong>+7.7</strong></td><td><strong>+5.4</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <figure class="research-figure">
+            <a href="static/images/fig6_centering.png" target="_blank" rel="noopener noreferrer" aria-label="Open full-size figure: RewardBench 2 learning curves with and without score centering">
+              <img src="static/images/fig6_centering.png?v=20261005" alt="RewardBench 2 learning curves with and without score centering" width="2235" height="619" loading="lazy" decoding="async" />
+            </a>
+            <figcaption><a href="static/pdfs/next-token-preference.pdf#page=7" target="_blank" rel="noopener noreferrer">Paper Figure 5b</a>. Score centering improves overall preference-alignment performance. Select the figure to view it at full size.</figcaption>
           </figure>
-          <p class="has-text-centered is-size-6" style="margin-top:0.5rem;">Figure 6: Centering loss effect.</p>
         </div>
-      </div> -->
+      </section>
 
-      <hr/>
+      <section class="research-section" aria-labelledby="cpt-control">
+        <h2 class="title is-4 has-text-centered" id="cpt-control">Does More Next-token Training Explain the Gains?</h2>
+        <div class="content">
+          <p>We continue pretraining Llama-3.2-3B on the <strong>same 11M FineMath tokens in the same order</strong>, using next-token prediction. To read out reward quality, we fit a frozen-backbone linear probe or jointly train a scalar reward head and backbone on 512 auxiliary preference pairs from held-out FineMath blocks. These pairs compare original continuations with perturbed copies.</p>
+        </div>
+        <div class="research-pair research-pair-text">
+          <div class="content">
+            <p>Continued pretraining (CPT) does not improve RewardBench 2 performance over the untouched base model under either readout. In contrast, replacing NTP’s learned head with the same frozen-backbone probe preserves its reward performance. This supports a contribution from the <strong>preference-learning objective</strong> beyond additional exposure to the corpus.</p>
+          </div>
+          <div class="table-container research-table-wrap" role="region" aria-labelledby="cpt-caption" tabindex="0">
+            <table class="table is-fullwidth research-table">
+              <caption id="cpt-caption"><a href="static/pdfs/next-token-preference.pdf#page=8" target="_blank" rel="noopener noreferrer">Paper Table 3</a>. Absolute RewardBench 2 scores (%). CPT and NTP each use 11M FineMath tokens. A dash indicates an unreported configuration.</caption>
+              <thead><tr><th scope="col">Readout</th><th scope="col">Untrained backbone</th><th scope="col">CPT backbone</th><th scope="col">NTP backbone</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">Frozen-backbone probe</th><td>30.0</td><td>28.9</td><td><strong>36.4</strong></td></tr>
+                <tr><th scope="row">Full RM conversion (512 pairs)</th><td>32.3</td><td>31.2</td><td>—</td></tr>
+                <tr><th scope="row">Original trained RM head</th><td>—</td><td>—</td><td>36.2</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
 
-      <!-- Best-of-N -->
-      <h3 class="title is-4 has-text-centered" id="bon">Best-of-N Selection</h3>
-      <div class="content">
-        <p>
-        <strong>RMs trained using our recipe provide strong best-of-<em>N</em> selection signals on both in-domain math tasks (GSM8K, MATH500) and out-of-domain settings (Toxigen, IFEval) </strong>, with BoN improvements becoming clearer and more monotonic as the actor model gets larger and more capable. 
-        We also compare against two strong baselines, <code>Skywork-Reward-V2-Llama-3.2-3B</code> and <code>Skywork-Reward-V2-Llama-3.1-8B</code> trained from 26M high-quality curated preference pairs.
-        While Skywork models are usually stronger in absolute terms, the gap shrinks with stronger actors—and our <code>FineMath-RM-Qwen-2.5-7B</code> is competitive with (and sometimes surpasses) a Skywork baseline on MATH500 and Toxigen, despite using only noisy, unlabeled web text.
-        </p>
-      </div>
+      <section class="research-section" aria-labelledby="corpora">
+        <h2 class="title is-4 has-text-centered" id="corpora">Generalization to Other Web Corpora</h2>
+        <div class="research-pair research-pair-text">
+          <div class="content">
+            <p><strong>NTP also works beyond FineMath.</strong> Under the same Llama-3.2-3B initialization, training settings, and 11M-token budget per corpus, MegaMath-Web-Pro-Max gives the largest overall gain. General-domain FineWeb-Edu comes within 0.1 percentage points of FineMath, showing that useful reward supervision also exists in educational text outside a math-specific corpus.</p>
+          </div>
+          <div class="table-container research-table-wrap" role="region" aria-labelledby="corpora-caption" tabindex="0">
+            <table class="table is-fullwidth research-table research-table-descriptive">
+              <caption id="corpora-caption"><a href="static/pdfs/next-token-preference.pdf#page=8" target="_blank" rel="noopener noreferrer">Paper Table 4</a>. Peak overall RewardBench 2 gains over the shared initialization, with 11M tokens per corpus.</caption>
+              <thead><tr><th scope="col">Training corpus</th><th scope="col">Domain</th><th scope="col">RewardBench 2 gain (pp)</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">FineMath-4plus</th><td>Mathematical web text</td><td>+7.7</td></tr>
+                <tr><th scope="row">MegaMath-Web-Pro-Max</th><td>Mathematical web text</td><td><strong>+8.3</strong></td></tr>
+                <tr><th scope="row">FineWeb-Edu</th><td>General educational web text</td><td>+7.6</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
 
-      <div class="columns is-centered">
-        <div class="column is-9">
-          <figure class="image">
-            <img src="static/images/fig8_bon_scaling.png" alt="BoN scaling curves across tasks and actors" />
+      <section class="research-section" aria-labelledby="bon">
+        <h2 class="title is-4 has-text-centered" id="bon">Best-of-N Selection</h2>
+        <div class="research-pair research-pair-text research-pair-figure-left">
+          <div class="content">
+            <p>We sample \(N\in\{1,2,4,8,16,32\}\) responses per prompt and select the one with the highest reward. <strong>MAP</strong> is Maximum Achieved Performance, the best task accuracy across the tested values of <em>N</em>. Actors are Llama-3.2-1B-Instruct, Llama-3.2-3B-Instruct, and Llama-3.1-8B-Instruct.</p>
+            <p>We evaluate <strong>MATH500 and GSM8K</strong> (math), <strong>HumanEval+</strong> (code), <strong>ToxiGen</strong> (safety), and <strong>IFEval</strong> (instruction following). The two NTP models are FineMath-RM-Llama-3.2-3B and FineMath-RM-Qwen-2.5-7B. Baselines include the Skywork 3B and 8B reward models, the supervised safety-oriented <code>beaver-7b-unified-reward</code>, and random selection.</p>
+            <p><strong>Selection gains become more consistent with stronger actors.</strong> The Qwen-based NTP model exceeds Beaver’s MAP on every evaluated task and actor size. It also exceeds Skywork’s 3B RM on ToxiGen at every actor size and matches Skywork’s 8B RM on MATH500 with the 8B actor. The strongest curated-data RMs remain ahead overall, and improvements are not monotonic in every setting.</p>
+          </div>
+          <figure class="research-figure">
+            <a href="static/images/fig8_bon_scaling.png" target="_blank" rel="noopener noreferrer" aria-label="Open full-size figure: Best-of-N results for three actor sizes across GSM8K, MATH500, HumanEval+, ToxiGen, and IFEval, including Skywork and Beaver baselines">
+              <img src="static/images/fig8_bon_scaling.png?v=20261005" alt="Best-of-N results for three actor sizes across GSM8K, MATH500, HumanEval+, ToxiGen, and IFEval, including Skywork and Beaver baselines" width="4824" height="7282" loading="lazy" decoding="async" />
+            </a>
+            <figcaption><a href="static/pdfs/next-token-preference.pdf#page=9" target="_blank" rel="noopener noreferrer">Paper Figure 7</a>. Five tasks across three actors; each column uses a different actor size. Metrics follow each task, including pass@1 with base and extra tests for HumanEval+ and prompt-level strict accuracy for IFEval. Select the figure to view it at full size.</figcaption>
           </figure>
-          <!-- <p class="has-text-centered is-size-6" style="margin-top:0.5rem;">
-            Figure 8: BoN scaling curves (export from paper).
-          </p> -->
         </div>
-      </div>
+      </section>
 
-      <hr/>
+      <section class="research-section" aria-labelledby="grpo">
+        <h2 class="title is-4 has-text-centered" id="grpo">Policy Optimization with GRPO</h2>
+        <div class="research-pair research-pair-text">
+          <div class="content">
+            <p>We train instruction-tuned 3B and 8B Llama actors on MATH and GSM8K for <strong>five GRPO epochs</strong>, using FineMath-RM-Qwen-2.5-7B as the reward signal. We report peak mean@1 test accuracy within that budget.</p>
+            <p>Our RM improves both actors on both tasks and achieves the best or second-best result in three of four settings, including the best GSM8K result for the 8B actor. It exceeds Beaver by 0.4–2.0 percentage points and outperforms its own untrained initialization in all four settings.</p>
+          </div>
+          <div class="table-container research-table-wrap" role="region" aria-labelledby="grpo-caption" tabindex="0">
+            <table class="table is-fullwidth research-table">
+              <caption id="grpo-caption"><a href="static/pdfs/next-token-preference.pdf#page=10" target="_blank" rel="noopener noreferrer">Paper Table 5</a>. Peak mean@1 accuracy (0–1). Actors: Llama-3.2-3B-Instruct and Llama-3.1-8B-Instruct. Bold and underlined values mark the best and second-best results.</caption>
+              <thead>
+                <tr><th scope="col" rowspan="2">Reward model</th><th scope="colgroup" colspan="2">3B actor</th><th scope="colgroup" colspan="2">8B actor</th></tr>
+                <tr><th scope="col">MATH</th><th scope="col">GSM8K</th><th scope="col">MATH</th><th scope="col">GSM8K</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">Before training</th><td>0.268</td><td>0.789</td><td>0.423</td><td>0.876</td></tr>
+                <tr><th scope="row">Skywork-Reward-V2-Llama-3.1-8B</th><td>0.419</td><td><strong>0.833</strong></td><td><u>0.447</u></td><td>0.882</td></tr>
+                <tr><th scope="row">Skywork-Reward-V2-Llama-3.2-3B</th><td><strong>0.439</strong></td><td>0.819</td><td><strong>0.465</strong></td><td><u>0.884</u></td></tr>
+                <tr><th scope="row">beaver-7b-unified-reward</th><td>0.416</td><td>0.803</td><td>0.430</td><td>0.881</td></tr>
+                <tr><th scope="row"><strong>FineMath-RM-Qwen-2.5-7B</strong></th><td><u>0.420</u></td><td><u>0.823</u></td><td>0.437</td><td><strong>0.886</strong></td></tr>
+                <tr><th scope="row">FineMath-RM-Qwen-2.5-7B-Init</th><td>0.399</td><td>0.812</td><td>0.428</td><td>0.879</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
 
-      <!-- Actor training -->
-      <h3 class="title is-4 has-text-centered" id="grpo">Policy Optimization with GRPO</h3>
-      <div class="content">
-        <p>
-          <strong><code>FineMath-RM-Qwen-2.5-7B</code> trained using our recipe provides a reliable reward signal for actor training, consistently improving mean@1 accuracy on GSM8K and MATH across both <code>Llama-3.2-3B-Instruct</code> and <code>Llama-3.1-8B-Instruct</code> actors.</strong>
-          It often achieves the best or second-best results when compared against strong off-the-shelf reward model baselines. 
-          The untrained “-Init” control is consistently the weakest, showing that the gains come from the learned reward signal rather than initialization. 
-          While Skywork reward models remain stronger overall—especially on MATH—our web-trained RM is still competitive despite using no curated preference data.
-        </p>
-      </div>
+      <section class="research-section" aria-labelledby="mid-training">
+        <h2 class="title is-4 has-text-centered" id="mid-training">NTP as an Initialization for Supervised Training</h2>
+        <div class="content">
+          <p><strong>Unlabeled web text can make subsequent preference labels more useful.</strong> We compare base, instruction-tuned, and NTP-trained Llama-3.2-3B initializations, then train each on RLHFMix1 <a href="#ref-9">[9]</a>, a mixture of UltraFeedback, HH-RLHF, SHP, and Summarize-from-Feedback.</p>
+          <p>The NTP checkpoint achieves a reported overall RewardBench 2 gain of 10.4 points after curated training, compared with 8.3 for base and 13.1 for instruction-tuned initialization. NTP gives the strongest reported ID-Math and OOD-Safety gains, while instruction-tuned initialization remains stronger overall and on OOD Others.</p>
+        </div>
+        <div class="research-pair research-pair-plot">
+          <div class="table-container research-table-wrap" role="region" aria-labelledby="midtraining-caption" tabindex="0">
+            <table class="table is-fullwidth research-table research-table-compact">
+              <caption id="midtraining-caption"><a href="static/pdfs/next-token-preference.pdf#page=10" target="_blank" rel="noopener noreferrer">Paper Table 6</a>. RewardBench 2 gains (percentage points) reported at the end of RLHFMix1 training for the three initializations.</caption>
+              <thead><tr><th scope="col">Llama-3.2-3B initialization</th><th scope="col">ID Math</th><th scope="col">OOD Safety</th><th scope="col">OOD Others</th><th scope="col">Overall</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">Base</th><td>+14.5</td><td>+22.3</td><td>+1.6</td><td>+8.3</td></tr>
+                <tr><th scope="row">Instruction-tuned</th><td>+19.4</td><td>+22.6</td><td><strong>+7.8</strong></td><td><strong>+13.1</strong></td></tr>
+                <tr><th scope="row">NTP (FineMath RM)</th><td><strong>+21.4</strong></td><td><strong>+24.4</strong></td><td>+2.0</td><td>+10.4</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <figure class="research-figure">
+            <a href="static/images/midtraining_rlhfmix1.png" target="_blank" rel="noopener noreferrer" aria-label="Open full-size figure: RewardBench 2 learning curves during supervised RLHFMix1 training from base, instruction-tuned, and NTP initializations">
+              <img src="static/images/midtraining_rlhfmix1.png?v=20261005" alt="RewardBench 2 learning curves during supervised RLHFMix1 training from base, instruction-tuned, and NTP initializations" width="1906" height="1144" loading="lazy" decoding="async" />
+            </a>
+            <figcaption><a href="static/pdfs/next-token-preference.pdf#page=36" target="_blank" rel="noopener noreferrer">Paper Figure 12</a>. Training trajectories over one epoch of curated preference learning. Select the figure to view it at full size.</figcaption>
+          </figure>
+        </div>
+        <h3 class="title is-5">Half the labels, stronger than full-data base initialization</h3>
+        <div class="research-pair research-pair-text">
+          <div class="content">
+            <p>In a separate labeled-data budget sweep, NTP initialization outperforms base initialization at every tested fraction. With <strong>50% of RLHFMix1 (approximately 122K pairs)</strong>, it reaches an overall RewardBench 2 score of approximately <strong>44</strong>, matching its own full-data result and exceeding base initialization’s approximately <strong>32</strong> with all 244K pairs.</p>
+            <p>The benefit is not uniformly increasing with more labels: NTP’s score dips at the 5–10% budgets before recovering. Its advantage over base initialization nevertheless persists throughout the sweep.</p>
+          </div>
+          <div class="table-container research-table-wrap" role="region" aria-labelledby="label-efficiency-caption" tabindex="0">
+            <table class="table is-fullwidth research-table">
+              <caption id="label-efficiency-caption"><a href="static/pdfs/next-token-preference.pdf#page=37" target="_blank" rel="noopener noreferrer">Paper Table 23 (Appendix J.1)</a>. Approximate absolute RewardBench 2 scores (%) and pair counts. The full dataset contains 244,216 pairs; NTP initialization first uses 11M unlabeled FineMath tokens.</caption>
+              <thead><tr><th scope="col">Labeled fraction</th><th scope="col">Preference pairs</th><th scope="col">Base initialization</th><th scope="col">NTP initialization</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">1%</th><td>≈2.4K</td><td>≈23</td><td>≈32</td></tr>
+                <tr><th scope="row">5%</th><td>≈12K</td><td>≈23</td><td>≈29</td></tr>
+                <tr><th scope="row">10%</th><td>≈24K</td><td>≈24</td><td>≈29</td></tr>
+                <tr><th scope="row">25%</th><td>≈61K</td><td>≈31</td><td>≈33</td></tr>
+                <tr><th scope="row"><strong>50%</strong></th><td><strong>≈122K</strong></td><td>≈32</td><td><strong>≈44</strong></td></tr>
+                <tr><th scope="row">100%</th><td>≈244K</td><td>≈32</td><td>≈44</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
 
-      <!-- Transfer across backbones table (no figure) -->
-<!-- BoN / actor-selection results table (no figure) -->
-<div class="columns is-centered">
-  <div class="column is-10">
-
-    <table class="table is-narrow is-fullwidth paperlike-table bon-table">
-      <thead>
-        <tr>
-          <th rowspan="2"></th>
-          <th colspan="2" class="has-text-centered">Actor: Llama-3.2-3B-Instruct</th>
-          <th colspan="2" class="has-text-centered">Actor: Llama-3.1-8B-Instruct</th>
-        </tr>
-        <tr>
-          <th class="has-text-centered">MATH</th>
-          <th class="has-text-centered">GSM8K</th>
-          <th class="has-text-centered">MATH</th>
-          <th class="has-text-centered">GSM8K</th>
-        </tr>
-        <tr>
-          <td colspan="5" style="padding:0;"><hr style="margin:0 0 2px 0; border-top: 2px solid #bbb; border-bottom: none;"></td>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr>
-          <td>Before training</td>
-          <td class="has-text-centered">0.268</td>
-          <td class="has-text-centered">0.789</td>
-          <td class="has-text-centered">0.423</td>
-          <td class="has-text-centered">0.876</td>
-        </tr>
-
-        <!-- midrule -->
-        <tr class="midrule">
-          <td>Skywork-Reward-V2-Llama-3.1-8B</td>
-          <td class="has-text-centered">0.419</td>
-          <td class="has-text-centered"><strong>0.833</strong></td>
-          <td class="has-text-centered"><u>0.447</u></td>
-          <td class="has-text-centered">0.882</td>
-        </tr>
-        <tr>
-          <td>Skywork-Reward-V2-Llama-3.2-3B</td>
-          <td class="has-text-centered"><strong>0.439</strong></td>
-          <td class="has-text-centered">0.819</td>
-          <td class="has-text-centered"><strong>0.465</strong></td>
-          <td class="has-text-centered"><u>0.884</u></td>
-        </tr>
-
-        <!-- section break -->
-        <tr class="midrule">
-          <td><strong>FineMath-RM-Qwen-2.5-7B</strong></td>
-          <td class="has-text-centered"><u>0.420</u></td>
-          <td class="has-text-centered"><u>0.823</u></td>
-          <td class="has-text-centered">0.437</td>
-          <td class="has-text-centered"><strong>0.886</strong></td>
-        </tr>
-        <tr>
-          <td>FineMath-RM-Qwen-2.5-7B-Init</td>
-          <td class="has-text-centered">0.399</td>
-          <td class="has-text-centered">0.812</td>
-          <td class="has-text-centered">0.428</td>
-          <td class="has-text-centered">0.879</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <!-- <p class="has-text-centered is-size-6" style="margin-top:0.5rem;">
-      BoN selection performance (MAP) across actors and tasks.
-    </p> -->
-
-  </div>
-</div>
-
-
-
-      <hr/>
-
-      <!-- Release note -->
-      <!-- <h3 class="title is-4 has-text-centered">Reproducibility & Release</h3>
-      <div class="content">
-        <p>
-          Dataset and code will be released after the double-blind review period ends.
-        </p>
-      </div>
-
-    </div> -->
+    </div>
   </section>
 
   <!-- References -->
@@ -1094,16 +596,21 @@
   <!-- BibTeX -->
   <section class="section" id="BibTeX">
     <div class="container is-max-desktop content">
-      <h2 class="title">BibTeX</h2>
-      <pre><code>@misc{anonymous2026scalingrewardmodeling,
-  title   = {Scaling Reward Modeling without Human Supervision},
-  author  = {Anonymous Authors},
-  note    = {Under review},
-  year    = {2026}
+      <div class="bibtex-header">
+        <h2 class="title">BibTeX</h2>
+        <button class="button is-small copy-bibtex-btn" type="button" onclick="copyBibTeX()" aria-label="Copy BibTeX citation">
+          <span class="copy-text" aria-live="polite">Copy</span>
+        </button>
+      </div>
+      <pre><code id="bibtex-code">@misc{fan2026nexttokenpreference,
+  title         = {Next-token Preference: Scaling Unsupervised Reward Modeling},
+  author        = {Jingxuan Fan and Yueying Li and Zhenting Qi and Dinghuai Zhang and
+                   Kianté Brantley and Sham M. Kakade and Hanlin Zhang},
+  year          = {2026},
+  eprint        = {2603.02225},
+  archivePrefix = {arXiv},
+  url           = {https://arxiv.org/abs/2603.02225}
 }</code></pre>
-      <p class="is-size-7" style="opacity:0.8;">
-        Replace with the final BibTeX (authors/venue/arXiv/OpenReview link) once available.
-      </p>
     </div>
   </section>
 
@@ -1138,7 +645,8 @@
   const sideNav = document.getElementById('sideNav');
 
   sideToggle?.addEventListener('click', () => {
-    sideNav.classList.toggle('is-open');
+    const open = sideNav.classList.toggle('is-open');
+    sideToggle.setAttribute('aria-expanded', String(open));
   });
 
   // Close drawer after clicking a link (mobile)
@@ -1146,6 +654,7 @@
     const a = e.target.closest('a');
     if (a && sideNav.classList.contains('is-open')) {
       sideNav.classList.remove('is-open');
+      sideToggle.setAttribute('aria-expanded', 'false');
     }
   });
 </script>

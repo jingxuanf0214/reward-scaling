@@ -431,10 +431,6 @@ code {
   background: #10b981;
 }
 
-.copy-bibtex-btn.copied .copy-text::after {
-  content: "ied!";
-}
-
 /* Scroll to Top Button */
 .scroll-to-top {
   position: fixed;
@@ -782,6 +778,209 @@ a:focus {
   padding: 0.35rem 0.5rem;
 }
 
+/* Research write-up: readable figures and tables at every screen size. */
+.revision-note {
+  color: var(--text-secondary);
+  margin: -0.5rem 0 1.5rem;
+  font-size: 0.95rem;
+}
+
+.research-summary {
+  padding: 1.5rem;
+  background: var(--background-secondary);
+  border-left: 3px solid var(--primary-color);
+  border-radius: 0 var(--border-radius) var(--border-radius) 0;
+}
+
+.research-section {
+  margin-top: 2.5rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--border-color);
+  container: research / inline-size;
+}
+
+.research-section h2,
+.research-section h3 {
+  scroll-margin-top: 1.5rem;
+}
+
+.research-section .content h3 {
+  margin-top: 2rem;
+}
+
+.research-section code,
+#references a {
+  overflow-wrap: anywhere;
+}
+
+/* Pair evidence with its explanation, using the available article width. */
+.research-pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: center;
+  margin: 1.5rem 0 2rem;
+}
+
+.research-pair > .content,
+.research-pair > .research-table-wrap,
+.research-pair > .research-figure {
+  min-width: 0;
+  width: 100%;
+  margin: 0;
+}
+
+.research-pair > .content {
+  font-size: 1.05rem;
+  line-height: 1.65;
+}
+
+@container research (min-width: 740px) {
+  .research-pair-text {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.25fr);
+    gap: 2rem;
+  }
+
+  .research-pair-figure-left {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.9fr);
+    align-items: start;
+  }
+
+  .research-pair-figure-left > .research-figure {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .research-pair-figure-left > .content {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .research-pair-plot {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.25fr);
+    gap: 1.5rem;
+  }
+}
+
+.research-table-wrap {
+  max-width: 100%;
+  margin: 1.25rem 0 2rem;
+  overflow-x: auto;
+}
+
+.research-table {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 0;
+  font-variant-numeric: tabular-nums;
+  border-top: 2px solid var(--text-primary);
+  border-bottom: 2px solid var(--text-primary);
+}
+
+.research-table caption {
+  caption-side: bottom;
+  padding: 0.8rem 0.25rem 0;
+  text-align: left;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.research-table thead th {
+  border-bottom: 1px solid var(--text-primary);
+  vertical-align: bottom;
+}
+
+.research-table th,
+.research-table td {
+  padding: 0.45rem 0.5rem;
+  vertical-align: middle;
+}
+
+.research-table tbody th {
+  font-weight: 400;
+  min-width: 7rem;
+  overflow-wrap: anywhere;
+}
+
+.table.research-table th:not(:first-child),
+.table.research-table td {
+  text-align: center;
+}
+
+.research-table td {
+  white-space: nowrap;
+}
+
+.research-table-descriptive td:nth-child(2) {
+  white-space: normal;
+}
+
+.research-table-compact {
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.research-table-compact th,
+.research-table-compact td {
+  padding: 0.45rem 0.3rem;
+}
+
+.research-table-compact tbody th {
+  min-width: 0;
+  overflow-wrap: normal;
+}
+
+.research-table thead th[scope="colgroup"] {
+  text-align: center;
+}
+
+.research-figure {
+  margin: 1.5rem auto 2rem;
+}
+
+.research-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.research-figure figcaption {
+  margin-top: 0.8rem;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.research-figure-compact {
+  max-width: 600px;
+}
+
+.equation {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.25rem 0;
+}
+
+.equation mjx-container[display="true"] {
+  min-width: min-content;
+}
+
+@media (max-width: 768px) {
+  #overview.section {
+    padding: 2rem 0.5rem;
+  }
+
+  .research-summary {
+    padding: 1rem;
+  }
+
+  #BibTeX .copy-bibtex-btn,
+  .side-toggle.button {
+    width: auto;
+  }
+}
+
 /* ===== Side menu layout ===== */
 html {
   scroll-behavior: smooth;
@@ -873,5 +1072,3 @@ html {
     padding: 0 12px;
   }
 }
-
-
